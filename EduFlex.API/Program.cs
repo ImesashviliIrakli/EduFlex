@@ -1,5 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
-
+using Persistance;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +13,8 @@ builder.Services.AddAuthentication("Bearer")
             ValidateAudience = false
         };
     });
+
+builder.Services.AddPersistanceServices(builder.Configuration);
 
 builder.Services.AddControllers();
 
@@ -28,7 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
