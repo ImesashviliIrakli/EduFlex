@@ -1,8 +1,16 @@
-﻿namespace EduFlex.API.Models;
+﻿using EduFlex.API.Enums;
 
-public class ResponseModel<T>
+namespace EduFlex.API.Models;
+
+public class ResponseModel
 {
-    public T Data { get; set; }
-    public int Code { get; set; }
-    public string Message { get; set; }
+    public ResponseModel(Status status, string message, object result)
+    {
+        this.Status = status;
+        this.Message = message;
+        this.Result = result;
+    }
+    public Status Status { get; set; } = Status.Success;
+    public string Message { get; set; } = "Successful request";
+    public object? Result { get; set; }
 }

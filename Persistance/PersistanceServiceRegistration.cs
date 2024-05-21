@@ -1,9 +1,7 @@
-﻿using Application.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistance.Data;
-using Persistance.Repositories;
 
 namespace Persistance;
 
@@ -22,7 +20,6 @@ public static class PersistanceServiceRegistration
             }
         );
 
-        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 }
