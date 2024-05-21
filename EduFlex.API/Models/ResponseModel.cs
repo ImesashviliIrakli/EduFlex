@@ -4,7 +4,7 @@ namespace EduFlex.API.Models;
 
 public class ResponseModel
 {
-    public ResponseModel(Status status, string message, object result)
+    public ResponseModel(Status status, string message, object? result = null)
     {
         this.Status = status;
         this.Message = message;

@@ -1,8 +1,10 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Exceptions;
+using Application.Interfaces.Services;
 using Application.Models.Auth;
 using Application.Options;
 using Identity.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,13 +20,15 @@ public class AuthService : IAuthService
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly JwtOptions _jwtOptions;
+    private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         AuthDbContext context,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IOptions<JwtOptions> jwtOptions
+            IOptions<JwtOptions> jwtOptions,
+            ILogger<AuthService> logger
         )
     {
         _context = context;
@@ -32,6 +36,7 @@ public class AuthService : IAuthService
         _signInManager = signInManager;
         _roleManager = roleManager;
         _jwtOptions = jwtOptions.Value;
+        _logger = logger;
     }
 
     public async Task<AuthResponse> Login(AuthRequest request)
@@ -39,18 +44,14 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user == null)
-        {
-            throw new Exception($"User with {request.Email} not found.");
-        }
+            throw new NotFoundException($"User with {request.Email} not found.");
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
         if (result.Succeeded == false)
-        {
-            throw new Exception($"Credentials for '{request.Email} aren't valid'.");
-        }
+            throw new BadRequestException($"Credentials for '{request.Email} aren't valid'.");
 
-        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+        JwtSecurityToken jwtSecurityToken = await GenerateTokenAsync(user);
 
         var response = new AuthResponse
         {
@@ -60,69 +61,80 @@ public class AuthService : IAuthService
             UserName = user.UserName
         };
 
+        _logger.LogInformation($"{user.UserName} logged in successfully");
         return response;
     }
-
 
     public async Task<RegistrationResponse> Register(RegistrationRequest request)
     {
         using (var transaction = await _context.Database.BeginTransactionAsync())
         {
-            var user = new IdentityUser
+            try
             {
-                Email = request.Email,
-                UserName = request.UserName,
-                EmailConfirmed = true
-            };
-
-            var result = await _userManager.CreateAsync(user, request.Password);
-
-            if (result.Succeeded)
-            {
-                var roleResult = await _userManager.AddToRoleAsync(user, request.RoleName);
-                if (roleResult.Succeeded)
+                var user = new IdentityUser
                 {
-                    await transaction.CommitAsync();
-                    return new RegistrationResponse() { UserId = user.Id };
-                }
-                else
+                    Email = request.Email,
+                    UserName = request.UserName,
+                    EmailConfirmed = true
+                };
+
+                var createUserResult = await _userManager.CreateAsync(user, request.Password);
+
+                if (!createUserResult.Succeeded)
                 {
                     await transaction.RollbackAsync();
-                    StringBuilder str = new StringBuilder();
-                    foreach (var err in roleResult.Errors)
-                    {
-                        str.AppendFormat("•{0}\n", err.Description);
-                    }
-                    throw new Exception($"Role assignment failed: {str}");
+                    throw new Exception(BuildErrorMessage(createUserResult.Errors));
                 }
+
+                var addRoleResult = await _userManager.AddToRoleAsync(user, request.RoleName);
+
+                if (!addRoleResult.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(BuildErrorMessage(addRoleResult.Errors));
+                }
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Role, request.RoleName)
+                };
+
+                var addClaimsResult = await _userManager.AddClaimsAsync(user, claims);
+
+                if (!addClaimsResult.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(BuildErrorMessage(addClaimsResult.Errors));
+                }
+
+                await transaction.CommitAsync();
+                return new RegistrationResponse { UserId = user.Id };
             }
-            else
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                StringBuilder str = new StringBuilder();
-                foreach (var err in result.Errors)
-                {
-                    str.AppendFormat("•{0}\n", err.Description);
-                }
-                throw new Exception($"{str}");
+                // Todo: Consider logging the exception here
+                throw new BadRequestException("Registration failed: " + ex.Message);
             }
         }
     }
 
-    public async Task<JwtSecurityToken> GenerateToken(IdentityUser applicationUser)
+    private string BuildErrorMessage(IEnumerable<IdentityError> errors)
     {
-        var roles = await _userManager.GetRolesAsync(applicationUser);
+        var stringBuilder = new StringBuilder();
+        foreach (var error in errors)
+        {
+            stringBuilder.AppendLine($"• {error.Description}");
+        }
+        return stringBuilder.ToString();
+    }
 
-        var roleClaims = roles.Select(q => new Claim(ClaimTypes.Role, q)).ToList();
-
-        var claimList = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Id),
-                new Claim(JwtRegisteredClaimNames.Name, applicationUser.UserName),
-            };
-
-        claimList.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
+    private async Task<JwtSecurityToken> GenerateTokenAsync(IdentityUser user)
+    {
+        var claims = await _userManager.GetClaimsAsync(user);
 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
 
@@ -131,7 +143,7 @@ public class AuthService : IAuthService
         var jwtSecurityToken = new JwtSecurityToken(
            issuer: _jwtOptions.Issuer,
            audience: _jwtOptions.Audience,
-           claims: claimList,
+           claims: claims,
            expires: DateTime.Now.AddMinutes(_jwtOptions.DurationInMinutes),
            signingCredentials: signingCredentials);
 
