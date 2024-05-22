@@ -23,9 +23,6 @@ public static class IdentityServiceRegistration
         services.AddDbContext<AuthDbContext>(options =>
            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddDefaultIdentity<ApplicationUser>()
-            .AddEntityFrameworkStores<AuthDbContext>();
-
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>().AddDefaultTokenProviders();
 
