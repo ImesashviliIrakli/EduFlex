@@ -111,12 +111,13 @@ public class AuthService : IAuthService
                 }
 
                 await transaction.CommitAsync();
+                _logger.LogInformation($"{request.Email} Has been registered successfully");
                 return new RegistrationResponse { UserId = user.Id };
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                // Todo: Consider logging the exception here
+                _logger.LogError($"Exception => Couldn't register user { request.Email } => Message: {ex.Message}");
                 throw new BadRequestException("Registration failed: " + ex.Message);
             }
         }
