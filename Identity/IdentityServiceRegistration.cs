@@ -1,9 +1,11 @@
 ﻿using Application.Interfaces.Services;
 using Application.Options;
 using Identity.Data;
+using Identity.Models;
 using Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,10 +23,13 @@ public static class IdentityServiceRegistration
         services.AddDbContext<AuthDbContext>(options =>
            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddIdentity<IdentityUser, IdentityRole>()
+        services.AddDefaultIdentity<ApplicationUser>()
+            .AddEntityFrameworkStores<AuthDbContext>();
+
+        services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>().AddDefaultTokenProviders();
 
-        services.AddTransient<IAuthService, AuthService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         services.AddAuthentication(options =>
         {

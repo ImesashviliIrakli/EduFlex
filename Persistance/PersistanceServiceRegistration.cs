@@ -15,7 +15,7 @@ public static class PersistanceServiceRegistration
             {
                 options.UseSqlServer
                 (
-                    configuartion.GetConnectionString("DefaultConnectionString")
+                    configuartion.GetConnectionString("DefaultConnection")
                 );
             }
         );

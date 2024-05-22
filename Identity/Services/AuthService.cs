@@ -3,6 +3,7 @@ using Application.Interfaces.Services;
 using Application.Models.Auth;
 using Application.Options;
 using Identity.Data;
+using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,16 +17,16 @@ namespace Identity.Services;
 public class AuthService : IAuthService
 {
     private readonly AuthDbContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly JwtOptions _jwtOptions;
     private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         AuthDbContext context,
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             IOptions<JwtOptions> jwtOptions,
             ILogger<AuthService> logger
@@ -71,7 +72,7 @@ public class AuthService : IAuthService
         {
             try
             {
-                var user = new IdentityUser
+                var user = new ApplicationUser
                 {
                     Email = request.Email,
                     UserName = request.UserName,
@@ -133,7 +134,7 @@ public class AuthService : IAuthService
         return stringBuilder.ToString();
     }
 
-    private async Task<JwtSecurityToken> GenerateTokenAsync(IdentityUser user)
+    private async Task<JwtSecurityToken> GenerateTokenAsync(ApplicationUser user)
     {
         var claims = await _userManager.GetClaimsAsync(user);
 

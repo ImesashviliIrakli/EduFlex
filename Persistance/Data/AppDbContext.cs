@@ -1,5 +1,5 @@
 ﻿using Domain;
-using Microsoft.AspNetCore.Identity;
+using Identity.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistance.Data;
@@ -19,28 +19,16 @@ public class AppDBContext : DbContext
         {
             entity.HasKey(e => e.Id);
 
-            // Configure the relationship
-            entity.HasOne<IdentityUser>()
-                  .WithOne()
-                  .HasForeignKey<Student>(e => e.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            // Ensure PrivateNumber is unique
             entity.HasIndex(e => e.PrivateNumber).IsUnique();
+            entity.HasIndex(e => e.UserId).IsUnique();
         });
 
         modelBuilder.Entity<Teacher>(entity =>
         {
             entity.HasKey(e => e.Id);
 
-            // Configure the relationship
-            entity.HasOne<IdentityUser>()
-                  .WithOne()
-                  .HasForeignKey<Teacher>(e => e.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            // Ensure PrivateNumber is unique
             entity.HasIndex(e => e.PrivateNumber).IsUnique();
+            entity.HasIndex(e => e.UserId).IsUnique();
         });
     }
 }
