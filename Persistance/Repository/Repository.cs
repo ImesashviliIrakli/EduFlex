@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Exceptions;
+using Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data;
 
@@ -52,8 +53,10 @@ public class Repository<T> : IRepository<T> where T : class
 		{
 			dbSet.Update(entity);
 			await _dbContext.SaveChangesAsync();
-		}
 
-		return entity;
-	}
+            return entity;
+        }
+
+		throw new BadRequestException($"Could not find entity to update");
+    }
 }
