@@ -33,9 +33,6 @@ namespace Persistance.Migrations
                     b.Property<int>("FacultyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -44,9 +41,33 @@ namespace Persistance.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.HasIndex("TeacherId");
-
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("Domain.Enrollment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherCourseMapId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherCourseMapId");
+
+                    b.ToTable("Enrollments");
                 });
 
             modelBuilder.Entity("Domain.Faculty", b =>
@@ -81,9 +102,6 @@ namespace Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FacultyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -105,8 +123,6 @@ namespace Persistance.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FacultyId");
 
                     b.HasIndex("PrivateNumber")
                         .IsUnique();
@@ -166,6 +182,29 @@ namespace Persistance.Migrations
                     b.ToTable("Teachers");
                 });
 
+            modelBuilder.Entity("Domain.TeacherCourse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("TeacherCourseMaps");
+                });
+
             modelBuilder.Entity("Domain.Course", b =>
                 {
                     b.HasOne("Domain.Faculty", "Faculty")
@@ -174,38 +213,70 @@ namespace Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Faculty");
+                });
+
+            modelBuilder.Entity("Domain.Enrollment", b =>
+                {
+                    b.HasOne("Domain.Student", "Student")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.TeacherCourse", "TeacherCourseMap")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("TeacherCourseMapId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+
+                    b.Navigation("TeacherCourseMap");
+                });
+
+            modelBuilder.Entity("Domain.TeacherCourse", b =>
+                {
+                    b.HasOne("Domain.Course", "Course")
+                        .WithMany("TeacherCourseMaps")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Teacher", "Teacher")
-                        .WithMany("Courses")
+                        .WithMany("TeacherCourseMaps")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Faculty");
+                    b.Navigation("Course");
 
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("Domain.Student", b =>
+            modelBuilder.Entity("Domain.Course", b =>
                 {
-                    b.HasOne("Domain.Faculty", "Faculty")
-                        .WithMany("Students")
-                        .HasForeignKey("FacultyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Faculty");
+                    b.Navigation("TeacherCourseMaps");
                 });
 
             modelBuilder.Entity("Domain.Faculty", b =>
                 {
                     b.Navigation("Courses");
+                });
 
-                    b.Navigation("Students");
+            modelBuilder.Entity("Domain.Student", b =>
+                {
+                    b.Navigation("Enrollments");
                 });
 
             modelBuilder.Entity("Domain.Teacher", b =>
                 {
-                    b.Navigation("Courses");
+                    b.Navigation("TeacherCourseMaps");
+                });
+
+            modelBuilder.Entity("Domain.TeacherCourse", b =>
+                {
+                    b.Navigation("Enrollments");
                 });
 #pragma warning restore 612, 618
         }

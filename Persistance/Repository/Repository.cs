@@ -22,23 +22,38 @@ public class Repository<T> : IRepository<T> where T : class
 	{
 		return await dbSet.FindAsync(id);
 	}
-	public async Task AddAsync(T obj)
+	public async Task<T> AddAsync(T entity)
 	{
-		await dbSet.AddAsync(obj);
-	}
+		await dbSet.AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
 
-	public async Task DeleteAsync(int id)
+		return entity;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
 	{
 		var entity = await dbSet.FindAsync(id);
 
 		if (entity != null)
 		{
 			dbSet.Remove(entity);
-		}
-	}
+            await _dbContext.SaveChangesAsync();
+			return true;
+        }
 
-	public async Task Save()
+		return false;
+    }
+
+	public async Task<T> UpdateAsync(int id, T entity)
 	{
-		await _dbContext.SaveChangesAsync();
+		var check = await dbSet.FindAsync(id);
+
+		if(check != null)
+		{
+			dbSet.Update(entity);
+			await _dbContext.SaveChangesAsync();
+		}
+
+		return entity;
 	}
 }

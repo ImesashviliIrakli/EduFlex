@@ -4,18 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain;
 public class Course
 {
-	[Key]
-	public int Id { get; set; }
-	[Required]
-	public string Title { get; set; }
+    [Key]
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public int FacultyId { get; set; }
 
-	[Required]
-	public int FacultyId { get; set; }
-	[ForeignKey(nameof(FacultyId))]
-	public Faculty Faculty { get; set; }
+    // Navigation property for related faculty
+    [ForeignKey("FacultyId")]
+    public Faculty Faculty { get; set; }
 
-	[Required]
-	public int TeacherId { get; set; }
-	[ForeignKey(nameof(TeacherId))]
-	public Teacher Teacher { get; set; }
+    // Navigation property for TeacherCourseMap
+    public ICollection<TeacherCourse> TeacherCourseMaps { get; set; }
 }
+

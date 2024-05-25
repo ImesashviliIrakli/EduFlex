@@ -13,9 +13,6 @@ public class Student
 	public required string PhoneNumber { get; set; }
 	public required string PrivateNumber { get; set; }
 	public DateTime DateOfBirth { get; set; }
+    public ICollection<Enrollment> Enrollments { get; set; }
 
-	[Required]
-	public int FacultyId { get; set; }
-	[ForeignKey(nameof(FacultyId))]
-	public Faculty Faculty { get; set; }
 }
