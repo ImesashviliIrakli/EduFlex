@@ -22,7 +22,8 @@ public static class PersistanceServiceRegistration
 			}
 		);
 
-		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddScoped<ICourseRepository, CourseRepository>();
+		services.AddScoped<IFacultyRepository, FacultyRepository>();
 
 		return services;
 	}

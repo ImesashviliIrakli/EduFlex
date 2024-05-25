@@ -10,9 +10,4 @@ public class CourseRepository : Repository<Course>, ICourseRepository
 	{
 		_dbContext = db;
 	}
-
-	public void Update(Course obj)
-	{
-		_dbContext.Courses.Update(obj);
-	}
 }
