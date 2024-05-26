@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain;
-public class Faculty
+namespace Application.Models.Dtos.FacultyDtos;
+
+public class UpdateFacultyDto
 {
-	[Key]
 	public int Id { get; set; }
 	[Required]
 	public required string Name { get; set; }
-	public ICollection<Course> Courses { get; set; } = new List<Course>();
 }

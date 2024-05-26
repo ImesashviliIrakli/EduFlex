@@ -1,5 +1,5 @@
-﻿using Application.Interfaces.Repositories;
-using Domain;
+﻿using Application.Interfaces.Services;
+using Application.Models.Dtos.FacultyDtos;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +12,11 @@ namespace EduFlex.API.Controllers
 	[Authorize(Roles = "Admin")]
 	public class FacultyController : ControllerBase
 	{
-		private IFacultyRepository _facultyRepository;
+		private IFacultyService _service;
 		private ResponseModel _response;
-		public FacultyController(IFacultyRepository facultyRepository)
+		public FacultyController(IFacultyService service)
 		{
-			_facultyRepository = facultyRepository;
+			_service = service;
 			_response = new ResponseModel(Status.Success, "Success");
 		}
 
@@ -24,7 +24,7 @@ namespace EduFlex.API.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Get()
 		{
-			_response.Result = await _facultyRepository.GetAllAsync();
+			_response.Result = await _service.GetAllAsync();
 			return Ok(_response);
 		}
 
@@ -32,28 +32,28 @@ namespace EduFlex.API.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Get(int id)
 		{
-			_response.Result = await _facultyRepository.GetByIdAsync(id);
+			_response.Result = await _service.GetByIdAsync(id);
 			return Ok(_response);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] Faculty entity)
+		public async Task<IActionResult> Post([FromBody] AddFacultyDto entity)
 		{
-			_response.Result = await _facultyRepository.AddAsync(entity);
+			_response.Result = await _service.AddAsync(entity);
 			return Ok(_response);
 		}
 
 		[HttpDelete("{id:int}")]
 		public async Task<IActionResult> Delete(int id)
 		{
-			_response.Result = await _facultyRepository.DeleteAsync(id);
+			_response.Result = await _service.DeleteAsync(id);
 			return Ok(_response);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Put(int id, Faculty entity)
+		public async Task<IActionResult> Put(int id, [FromBody] UpdateFacultyDto entity)
 		{
-			_response.Result = await _facultyRepository.UpdateAsync(id, entity);
+			_response.Result = await _service.UpdateAsync(id, entity);
 			return Ok(_response);
 		}
 	}
