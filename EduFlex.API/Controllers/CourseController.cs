@@ -1,4 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
+using Application.Models.Dtos.CourseDtos;
 using Domain;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
@@ -12,11 +14,11 @@ namespace EduFlex.API.Controllers
 	[Authorize(Roles = "Admin")]
 	public class CourseController : ControllerBase
 	{
-		private ICourseRepository _courseRepository;
+		private ICourseService _service;
 		private ResponseModel _response;
-		public CourseController(ICourseRepository courseRepository)
+		public CourseController(ICourseService service)
 		{
-			_courseRepository = courseRepository;
+			_service = service;
 			_response = new ResponseModel(Status.Success, "Success");
 		}
 
@@ -24,7 +26,7 @@ namespace EduFlex.API.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Get()
 		{
-			_response.Result = await _courseRepository.GetAllAsync();
+			_response.Result = await _service.GetAllAsync();
 			return Ok(_response);
 		}
 
@@ -32,28 +34,28 @@ namespace EduFlex.API.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Get(int id)
 		{
-			_response.Result = await _courseRepository.GetByIdAsync(id);
+			_response.Result = await _service.GetByIdAsync(id);
 			return Ok(_response);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] Course entity)
+		public async Task<IActionResult> Post([FromBody] AddCourseDto entity)
 		{
-			_response.Result = await _courseRepository.AddAsync(entity);
+			_response.Result = await _service.AddAsync(entity);
 			return Ok(_response);
 		}
 
 		[HttpDelete("{id:int}")]
 		public async Task<IActionResult> Delete(int id)
 		{
-			_response.Result = await _courseRepository.DeleteAsync(id);
+			_response.Result = await _service.DeleteAsync(id);
 			return Ok(_response);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Put(int id, Course entity)
+		public async Task<IActionResult> Put(int id, [FromBody] UpdateCourseDto entity)
 		{
-			_response.Result = await _courseRepository.UpdateAsync(id, entity);
+			_response.Result = await _service.UpdateAsync(id, entity);
 			return Ok(_response);
 		}
 	}
