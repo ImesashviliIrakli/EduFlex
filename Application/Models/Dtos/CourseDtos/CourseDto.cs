@@ -1,4 +1,4 @@
-﻿namespace Application.Models.Dtos;
+﻿namespace Application.Models.Dtos.CourseDtos;
 
 public class CourseDto
 {
