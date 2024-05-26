@@ -20,7 +20,10 @@ public class MappingProfiles : Profile
         CreateMap<AddStudentDto, Student>();
         CreateMap<UpdateStudentDto, Student>();
 
+        // TeacherCourse Map
         CreateMap<TeacherCourse, TeacherCourseDto>().ReverseMap();
+        CreateMap<AddTeacherCourseDto, TeacherCourse>();
+
         CreateMap<Course, CourseDto>().ReverseMap();
         CreateMap<Faculty, FacultyDto>().ReverseMap();
         CreateMap<Enrollment, EnrollmentDto>().ReverseMap();
