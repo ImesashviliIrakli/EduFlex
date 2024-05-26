@@ -1,7 +1,7 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Models.Dtos;
+using Application.Models.Dtos.TeacherDtos;
 using AutoMapper;
 using Domain;
 using Microsoft.Extensions.Logging;
@@ -19,7 +19,7 @@ public class TeacherService : ITeacherService
         _mapper = mapper;
         _logger = logger;
     }
-    public async Task<TeacherDto> AddAsync(TeacherDto entity)
+    public async Task<TeacherDto> AddAsync(AddTeacherDto entity)
     {
         var checkUser = await _teacherRepository.GetByUserIdAsync(entity.UserId);
 
@@ -70,7 +70,7 @@ public class TeacherService : ITeacherService
         return result;
     }
 
-    public async Task<TeacherDto> UpdateAsync(int id, TeacherDto entity)
+    public async Task<TeacherDto> UpdateAsync(int id, UpdateTeacherDto entity)
     {
         var checkUser = await _teacherRepository.GetByIdAsync(id);
 

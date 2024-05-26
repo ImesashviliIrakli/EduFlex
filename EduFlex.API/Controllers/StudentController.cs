@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces.Services;
+using Application.Models.Dtos.StudentDtos;
 using Application.Models.Dtos.TeacherDtos;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,12 +10,11 @@ namespace EduFlex.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Teacher")]
-public class TeacherController : ControllerBase
+public class StudentController : ControllerBase
 {
-    private readonly ITeacherService _service;
+    private readonly IStudentService _service;
     private ResponseModel _response;
-    public TeacherController(ITeacherService service)
+    public StudentController(IStudentService service)
     {
         _service = service;
         _response = new ResponseModel(Status.Success, "Success");
@@ -36,18 +35,20 @@ public class TeacherController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] AddTeacherDto body)
+    public async Task<IActionResult> Post([FromBody] AddStudentDto body)
     {
         body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        body.Email = User.FindFirstValue(ClaimTypes.Email);
 
         _response.Result = await _service.AddAsync(body);
         return Ok(_response);
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromBody] UpdateTeacherDto body)
+    public async Task<IActionResult> Put([FromBody] UpdateStudentDto body)
     {
         body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        body.Email = User.FindFirstValue(ClaimTypes.Email);
 
         _response.Result = await _service.UpdateAsync(body.Id, body);
         return Ok(_response);

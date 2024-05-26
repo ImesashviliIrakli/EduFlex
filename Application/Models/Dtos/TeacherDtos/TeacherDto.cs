@@ -1,6 +1,6 @@
-﻿namespace Application.Models.Dtos;
+﻿namespace Application.Models.Dtos.TeacherDtos;
 
-public class StudentDto
+public class TeacherDto
 {
     public int Id { get; set; }
     public required string UserId { get; set; }
@@ -10,4 +10,5 @@ public class StudentDto
     public required string PhoneNumber { get; set; }
     public required string PrivateNumber { get; set; }
     public DateTime DateOfBirth { get; set; }
+    public int YearsOfExperience { get; set; }
 }

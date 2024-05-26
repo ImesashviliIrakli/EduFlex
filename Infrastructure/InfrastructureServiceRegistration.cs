@@ -13,6 +13,7 @@ public static class InfrastructureServiceRegistration
         services.Configure<IdentitySettings>(options => configuration.GetSection("IdentitySettings").Bind(options));
 
         services.AddScoped<ITeacherService, TeacherService>();
+        services.AddScoped<IStudentService, StudentService>();
 
         return services;
     }
