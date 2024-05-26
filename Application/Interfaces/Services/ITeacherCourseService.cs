@@ -1,5 +1,4 @@
 ﻿using Application.Models.Dtos;
-using Application.Models.Dtos.TeacherCourseDto;
 
 namespace Application.Interfaces.Services;
 

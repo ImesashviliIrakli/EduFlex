@@ -22,6 +22,10 @@ public class MappingProfiles : Profile
 		CreateMap<AddStudentDto, Student>();
 		CreateMap<UpdateStudentDto, Student>();
 
+		// TeacherCourse Map
+		CreateMap<TeacherCourse, TeacherCourseDto>().ReverseMap();
+		CreateMap<AddTeacherCourseDto, TeacherCourse>();
+
 		// Course Map
 		CreateMap<Course, CourseDto>().ReverseMap();
 		CreateMap<AddCourseDto, Course>();
@@ -32,7 +36,6 @@ public class MappingProfiles : Profile
 		CreateMap<AddFacultyDto, Faculty>();
 		CreateMap<UpdateFacultyDto, Faculty>();
 
-		CreateMap<TeacherCourse, TeacherCourseDto>().ReverseMap();
 		CreateMap<Enrollment, EnrollmentDto>().ReverseMap();
 	}
 }

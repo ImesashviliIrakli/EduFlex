@@ -12,8 +12,9 @@ public static class InfrastructureServiceRegistration
 	{
 		services.Configure<IdentitySettings>(options => configuration.GetSection("IdentitySettings").Bind(options));
 
-		services.AddScoped<ITeacherService, TeacherService>();
-		services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<ITeacherService, TeacherService>();
+        services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<ITeacherCourseService, TeacherCourseService>();
 		services.AddScoped<ICourseService, CourseService>();
 		services.AddScoped<IFacultyService, FacultyService>();
 

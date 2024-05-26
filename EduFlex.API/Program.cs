@@ -1,9 +1,10 @@
+using Application;
 using EduFlex.API.Middleware;
 using Identity;
+using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Persistance;
-using Application;
 using Serilog;
 using Infrastructure;
 

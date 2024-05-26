@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Services;
+using Application.Models.Dtos;
 using Application.Models.Dtos.StudentDtos;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
@@ -9,11 +10,11 @@ namespace EduFlex.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class StudentController : ControllerBase
+public class TeacherCourseController : ControllerBase
 {
-    private readonly IStudentService _service;
+    private readonly ITeacherCourseService _service;
     private ResponseModel _response;
-    public StudentController(IStudentService service)
+    public TeacherCourseController(ITeacherCourseService service)
     {
         _service = service;
         _response = new ResponseModel(Status.Success, "Success");
@@ -34,22 +35,11 @@ public class StudentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] AddStudentDto body)
+    public async Task<IActionResult> Post([FromBody] AddTeacherCourseDto body)
     {
         body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        body.Email = User.FindFirstValue(ClaimTypes.Email);
 
         _response.Result = await _service.AddAsync(body);
-        return Ok(_response);
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> Put([FromBody] UpdateStudentDto body)
-    {
-        body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        body.Email = User.FindFirstValue(ClaimTypes.Email);
-
-        _response.Result = await _service.UpdateAsync(body.Id, body);
         return Ok(_response);
     }
 
