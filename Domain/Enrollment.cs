@@ -8,7 +8,7 @@ public class Enrollment
     public int StudentId { get; set; }
     public int TeacherCourseMapId { get; set; }
     public DateTime Date { get; set; }
-
+    public int Status { get; set; }
     // Navigation properties
     [ForeignKey("StudentId")]
     public required Student Student { get; set; }
