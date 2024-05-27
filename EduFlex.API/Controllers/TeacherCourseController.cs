@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces.Services;
 using Application.Models.Dtos;
-using Application.Models.Dtos.StudentDtos;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,6 +10,7 @@ namespace EduFlex.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Teacher")]
 public class TeacherCourseController : ControllerBase
 {
     private readonly ITeacherCourseService _service;
@@ -21,6 +22,7 @@ public class TeacherCourseController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Teacher,Student,Admin")]
     public async Task<IActionResult> Get()
     {
         _response.Result = await _service.GetAllAsync();
@@ -28,6 +30,7 @@ public class TeacherCourseController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [Authorize(Roles = "Teacher,Student,Admin")]
     public async Task<IActionResult> Get(int id)
     {
         _response.Result = await _service.GetByIdAsync(id);

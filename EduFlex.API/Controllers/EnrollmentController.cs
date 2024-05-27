@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces.Services;
-using Application.Models.Dtos.StudentDtos;
+using Application.Models.Dtos.EnrollmentDtos;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -10,19 +10,18 @@ namespace EduFlex.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Student")]
-public class StudentController : ControllerBase
+[Authorize]
+public class EnrollmentController : ControllerBase
 {
-    private readonly IStudentService _service;
+    private readonly IEnrollmentService _service;
     private ResponseModel _response;
-    public StudentController(IStudentService service)
+    public EnrollmentController(IEnrollmentService service)
     {
         _service = service;
         _response = new ResponseModel(Status.Success, "Success");
     }
 
     [HttpGet]
-    [Authorize(Roles = "Student,Teacher,Admin")]
     public async Task<IActionResult> Get()
     {
         _response.Result = await _service.GetAllAsync();
@@ -30,7 +29,6 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Student,Teacher,Admin")]
     public async Task<IActionResult> Get(int id)
     {
         _response.Result = await _service.GetByIdAsync(id);
@@ -38,20 +36,18 @@ public class StudentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] AddStudentDto body)
+    public async Task<IActionResult> Post([FromBody] AddEnrollmentDto body)
     {
-        body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        body.Email = User.FindFirstValue(ClaimTypes.Email);
+        body.StudentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         _response.Result = await _service.AddAsync(body);
         return Ok(_response);
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromBody] UpdateStudentDto body)
+    public async Task<IActionResult> Put([FromBody] UpdateEnrollmentDto body)
     {
-        body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        body.Email = User.FindFirstValue(ClaimTypes.Email);
+        body.StudentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         _response.Result = await _service.UpdateAsync(body.Id, body);
         return Ok(_response);

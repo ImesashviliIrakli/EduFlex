@@ -1,4 +1,4 @@
-﻿namespace Application.Models.Dtos;
+﻿namespace Application.Models.Dtos.EnrollmentDtos;
 
 public class EnrollmentDto
 {
@@ -6,4 +6,5 @@ public class EnrollmentDto
     public int StudentId { get; set; }
     public int TeacherCourseMapId { get; set; }
     public DateTime Date { get; set; }
+    public int Status { get; set; }
 }
