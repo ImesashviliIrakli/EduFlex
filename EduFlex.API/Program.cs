@@ -45,6 +45,17 @@ builder.Services.AddSwaggerGen(x =>
 	});
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000") // React app URL
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 builder.Host.UseSerilog((context, loggerConfig) =>
 	loggerConfig.ReadFrom.Configuration(context.Configuration));
 
@@ -64,6 +75,8 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseSerilogRequestLogging();
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 

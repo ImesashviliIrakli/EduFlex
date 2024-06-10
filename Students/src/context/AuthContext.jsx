@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
 
 const AuthContext = createContext();
@@ -9,13 +9,18 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         const response = await axios.post(baseUrl+'/api/auth/login', { email, password });
-        const token = response.data.token;
+        console.log(response);
+        const token = response.data.result.token;
+        console.log(token);
         localStorage.setItem('token', token);
-        setAuth({ token, user: jwt_decode(token) });
+        localStorage.setItem('user', JSON.stringify(jwtDecode(token)));
+        setAuth({ token, user: jwtDecode(token) });
     };
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        console.log('logged out');
         setAuth(null);
     };
 
