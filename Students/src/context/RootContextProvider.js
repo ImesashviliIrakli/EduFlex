@@ -1,17 +1,12 @@
-/* eslint-disable react/prop-types */
-import { createContext, useState } from "react";
+import { createContext } from "react";
 
 export const RootContext = createContext();
 
 function RootContextProvider({ children }) {
   const baseUrl = "https://localhost:7000";
 
-  const [token, setToken] = useState(null);
-
   return (
-    <RootContext.Provider value={{ baseUrl, token, setToken }}>
-      {children}
-    </RootContext.Provider>
+    <RootContext.Provider value={{ baseUrl }}>{children}</RootContext.Provider>
   );
 }
 

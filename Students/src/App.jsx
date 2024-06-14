@@ -6,21 +6,26 @@ import { router } from "./router/Router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import RootContextProvider from "./context/RootContextProvider";
+import AlertBarContextProvider from "./context/AlertBarContextProvider";
+import AlertBar from "./components/alertbar/AlertBar";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <>
-      <RootContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            buttonPosition="top-right"
-          />
-        </QueryClientProvider>
-      </RootContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <RootContextProvider>
+          <AlertBarContextProvider>
+            <RouterProvider router={router} />
+            <AlertBar />
+          </AlertBarContextProvider>
+        </RootContextProvider>
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          buttonPosition="bottom-right"
+        />
+      </QueryClientProvider>
     </>
   );
 }
