@@ -1,26 +1,28 @@
-// src/App.jsx
+import "bootstrap/dist/css/bootstrap.min.css";
+import "normalize.css";
+import "./index.css";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/Router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import RootContextProvider from "./context/RootContextProvider";
 
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-//import PrivateRoute from './components/PrivateRoute';
-import Login from './components/Login';
-import Register from './components/Register';
-import Home from './components/Home';
+const queryClient = new QueryClient();
 
 function App() {
-    return (
-        <AuthProvider>
-            <Router>
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/" element={<Login />} />
-                </Routes>
-            </Router>
-        </AuthProvider>
-    );
+  return (
+    <>
+      <RootContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="top-right"
+          />
+        </QueryClientProvider>
+      </RootContextProvider>
+    </>
+  );
 }
 
 export default App;
