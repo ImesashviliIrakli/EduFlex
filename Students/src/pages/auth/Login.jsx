@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import LoginIcon from "@mui/icons-material/Login";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -46,7 +47,7 @@ function Login() {
       sessionStorage.setItem("token", JSON.stringify(data.result.token));
       handleSnackbarOpen();
       setSnackbarStat(snackbarStatus.success);
-      setSnackbarMessage("Successfully logged in");
+      setSnackbarMessage("Logged in Successfully!");
       setTimeout(() => navigate("/home"), 2500);
     },
     onError: (error) => {
@@ -54,7 +55,7 @@ function Login() {
       sessionStorage.setItem("token", undefined);
       handleSnackbarOpen();
       setSnackbarStat(snackbarStatus.error);
-      setSnackbarMessage(error.data?.Result?.Message);
+      setSnackbarMessage(error.data?.Result?.Message || "An Error Occured");
     },
   });
 
@@ -66,7 +67,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutation.mutate({ email: email, password: password });
+    mutation.mutate({ email, password });
   };
 
   return (
@@ -109,13 +110,16 @@ function Login() {
               label="Password"
             />
           </FormControl>
+
           <Box mt={2}>
             <Button variant="contained" endIcon={<LoginIcon />} type="submit">
               Login
             </Button>
             <span>or</span>
-            <Link variant="outlined" to="/auth/registration">
-              <Button variant="outlined">Register</Button>
+            <Link to="/auth/registration">
+              <Button variant="outlined" endIcon={<AccountCircleIcon />}>
+                Register
+              </Button>
             </Link>
           </Box>
         </Box>
