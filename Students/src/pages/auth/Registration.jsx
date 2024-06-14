@@ -1,5 +1,4 @@
-import "./login-registration.css";
-import "./login-registration.css";
+import "./auth.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRootContext } from "../../hooks/useRootContext";

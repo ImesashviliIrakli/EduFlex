@@ -1,4 +1,4 @@
-import "./login-registration.css";
+import "./auth.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRootContext } from "../../hooks/useRootContext";
@@ -114,7 +114,7 @@ function Login() {
               Login
             </Button>
             <span>or</span>
-            <Link variant="outlined" to="/registration">
+            <Link variant="outlined" to="/auth/registration">
               <Button variant="outlined">Register</Button>
             </Link>
           </Box>
