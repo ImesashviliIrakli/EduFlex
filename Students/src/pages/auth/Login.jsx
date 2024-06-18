@@ -1,5 +1,5 @@
 import "./auth.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRootContext } from "../../hooks/useRootContext";
 import { useAlertBarContext } from "../../hooks/useAlertBarContext";
@@ -45,14 +45,16 @@ function Login() {
     onSuccess: (data) => {
       sessionStorage.setItem("userData", JSON.stringify(data.result));
       sessionStorage.setItem("token", JSON.stringify(data.result.token));
+      sessionStorage.setItem("login", "true");
       handleSnackbarOpen();
       setSnackbarStat(snackbarStatus.success);
       setSnackbarMessage("Logged in Successfully!");
-      setTimeout(() => navigate("/home"), 2500);
+      setTimeout(() => navigate("/courses"), 2500);
     },
     onError: (error) => {
-      sessionStorage.setItem("userData", undefined);
-      sessionStorage.setItem("token", undefined);
+      sessionStorage.removeItem("userData");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("login");
       handleSnackbarOpen();
       setSnackbarStat(snackbarStatus.error);
       setSnackbarMessage(error.data?.Result?.Message || "An Error Occured");

@@ -23,7 +23,7 @@ function App() {
         </RootContextProvider>
         <ReactQueryDevtools
           initialIsOpen={false}
-          buttonPosition="bottom-right"
+          buttonPosition="bottom-left"
         />
       </QueryClientProvider>
     </>

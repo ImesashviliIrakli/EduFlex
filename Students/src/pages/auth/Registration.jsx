@@ -43,17 +43,13 @@ function Registration() {
         method: "post",
         data: JSON.stringify(registerData),
       }),
-    onSuccess: (data) => {
-      // sessionStorage.setItem("userData", JSON.stringify(data.result));
-      // sessionStorage.setItem("token", JSON.stringify(data.result.token));
+    onSuccess: () => {
       handleSnackbarOpen();
       setSnackbarStat(snackbarStatus.success);
       setSnackbarMessage("Registered Successfully!");
-      setTimeout(() => navigate("/home"), 2500);
+      setTimeout(() => navigate("/"), 2500);
     },
     onError: (error) => {
-      // sessionStorage.setItem("userData", undefined);
-      // sessionStorage.setItem("token", undefined);
       handleSnackbarOpen();
       setSnackbarStat(snackbarStatus.error);
       setSnackbarMessage(error.data?.Result?.Message || "An Error Occured");
