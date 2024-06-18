@@ -3,5 +3,6 @@
 public class AddCourseDto
 {
 	public string Title { get; set; }
-	public int FacultyId { get; set; }
+    public string ImageUrl { get; set; }
+    public int FacultyId { get; set; }
 }

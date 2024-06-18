@@ -27,7 +27,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
     {
         _response.Result = await _authenticationService.Register(request);
