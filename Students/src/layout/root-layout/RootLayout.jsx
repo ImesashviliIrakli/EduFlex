@@ -1,6 +1,8 @@
 import "./root-layout.css";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { AccountCircle } from "@mui/icons-material";
+import { Fab } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,16 +11,12 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import useScrollTrigger from "@mui/material/useScrollTrigger";
-import Fab from "@mui/material/Fab";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Fade from "@mui/material/Fade";
-import { AccountCircle } from "@mui/icons-material";
 
 const settings = ["Account", "Logout"];
 

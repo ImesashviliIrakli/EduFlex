@@ -7,13 +7,12 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
-  },
-  loader: { ".js": "jsx" },
-  esbuild: {
-    loader: "jsx",
-    include: ["src/**/*.js", "src/**/*.jsx"],
-    exclude: [],
-  },
+  // esbuild: {
+  //   loader: { ".js": "jsx" },
+  //   include: ["src/**/*.js", "src/**/*.jsx"],
+  //   exclude: [],
+  // },
+  // resolve: {
+  //   extensions: [".js", ".jsx"],
+  // },
 });

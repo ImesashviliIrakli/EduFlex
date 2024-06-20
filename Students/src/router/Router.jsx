@@ -1,5 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "normalize.css";
 import {
   Route,
   createBrowserRouter,
