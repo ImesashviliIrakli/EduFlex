@@ -64,7 +64,7 @@ public class TeacherService : ITeacherService
 
     public async Task<TeacherDto> GetByIdAsync(int id)
     {
-        var teacher = await _teacherRepository.GetByIdAsync(id);
+        var teacher = await _teacherRepository.GetByIdAsync(filter: (u) => u.Id == id);
         var result = _mapper.Map<TeacherDto>(teacher);
 
         return result;
@@ -72,7 +72,7 @@ public class TeacherService : ITeacherService
 
     public async Task<TeacherDto> UpdateAsync(int id, UpdateTeacherDto entity)
     {
-        var checkUser = await _teacherRepository.GetByIdAsync(id);
+        var checkUser = await _teacherRepository.GetByIdAsync(filter: (u) => u.Id == id);
 
         if (checkUser.UserId != entity.UserId)
             throw new BadRequestException("You don't have permission to update different profile");

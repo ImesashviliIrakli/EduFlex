@@ -5,6 +5,7 @@ export async function fetchData(config) {
     const response = await axios({
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
       ...config,
     });

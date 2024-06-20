@@ -67,7 +67,7 @@ public class EnrollmentService : IEnrollmentService
 
     public async Task<EnrollmentDto> GetByIdAsync(int id)
     {
-        var enrollment = await _enrollmentRepository.GetByIdAsync(id);
+        var enrollment = await _enrollmentRepository.GetByIdAsync(filter: (u) => u.Id == id);
 
         if (enrollment == null)
             throw new NotFoundException("Enrollment not found");

@@ -15,6 +15,7 @@ function Courses() {
 
   if (isLoading) return <Loader />;
 
+  console.log(courses.result);
   return (
     <div className="courses">
       <div className="courses-container d-flex justify-content-center align-items-center flex-wrap">
@@ -36,8 +37,7 @@ function Courses() {
                   {course.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over
-                  6,000 species, ranging across all continents except Antarctica
+                  {course.description}
                 </Typography>
               </CardContent>
             </CardActionArea>

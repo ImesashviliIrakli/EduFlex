@@ -42,7 +42,7 @@ public class TeacherCourseService : ITeacherCourseService
     public async Task<bool> DeleteAsync(int id, string userId)
     {
         var teacher = await ValidateTeacherAsync(userId, null);
-        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(id);
+        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(filter: (u) => u.Id == id);
 
         if (teacherCourse == null || teacherCourse.TeacherId != teacher.Id)
             throw new BadRequestException($"Course not found or does not belong to the specified teacher.");
@@ -65,7 +65,7 @@ public class TeacherCourseService : ITeacherCourseService
 
     public async Task<TeacherCourseDto> GetByIdAsync(int id)
     {
-        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(id);
+        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(filter: (u) => u.Id == id);
         if (teacherCourse == null)
             throw new NotFoundException($"Course with ID {id} not found.");
 

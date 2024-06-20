@@ -59,7 +59,7 @@ namespace Infrastructure.Services
 
 		public async Task<FacultyDto> GetByIdAsync(int id)
 		{
-			var faculty = await _facultyRepository.GetByIdAsync(id);
+			var faculty = await _facultyRepository.GetByIdAsync(filter: (u) => u.Id == id);
 			var result = _mapper.Map<FacultyDto>(faculty);
 
 			return result;

@@ -2,31 +2,58 @@
 using Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data;
+using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Persistance.Repository;
 public class Repository<T> : IRepository<T> where T : class
 {
-	private readonly AppDBContext _dbContext;
+	private readonly AppDBContext _db;
 	private DbSet<T> dbSet;
 	public Repository(AppDBContext db)
 	{
-		_dbContext = db;
-		this.dbSet = _dbContext.Set<T>();
+		_db = db;
+		this.dbSet = _db.Set<T>();
 	}
 
-	public async Task<IEnumerable<T>> GetAllAsync()
+	public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
 	{
-		return await dbSet.ToListAsync();
+		IQueryable<T> query = dbSet;	
+
+		if(includeProperties != null)
+		{
+			foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProp);
+			}
+		}
+
+		return await query.ToListAsync();
 	}
 
-	public async Task<T> GetByIdAsync(int id)
+	public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
 	{
-		return await dbSet.FindAsync(id);
+		IQueryable<T> query = dbSet;
+
+		if (filter != null)
+		{
+			query = query.Where(filter);
+		}
+
+		if (includeProperties != null)
+		{
+			foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProp);
+			}
+		}
+
+		return await query.FirstOrDefaultAsync();
 	}
 	public async Task<T> AddAsync(T entity)
 	{
 		await dbSet.AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        await _db.SaveChangesAsync();
 
 		return entity;
     }
@@ -38,7 +65,7 @@ public class Repository<T> : IRepository<T> where T : class
 		if (entity != null)
 		{
 			dbSet.Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 			return true;
         }
 
@@ -52,7 +79,7 @@ public class Repository<T> : IRepository<T> where T : class
 		if(check != null)
 		{
 			dbSet.Update(entity);
-			await _dbContext.SaveChangesAsync();
+			await _db.SaveChangesAsync();
 
             return entity;
         }
