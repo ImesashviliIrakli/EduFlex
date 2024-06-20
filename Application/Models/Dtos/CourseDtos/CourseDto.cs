@@ -1,4 +1,6 @@
-﻿namespace Application.Models.Dtos.CourseDtos;
+﻿using Application.Models.Dtos.FacultyDtos;
+
+namespace Application.Models.Dtos.CourseDtos;
 
 public class CourseDto
 {
@@ -7,5 +9,5 @@ public class CourseDto
 	public string Description { get; set; }
 	public int Price { get; set; }
 	public string ImageUrl { get; set; }
-	public int FacultyId { get; set; }
+	public FacultyDto Faculty { get; set; }
 }

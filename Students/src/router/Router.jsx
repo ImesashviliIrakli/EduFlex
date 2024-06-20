@@ -11,6 +11,7 @@ import NotFound from "../pages/not-found/NotFound";
 import Login from "../pages/auth/Login";
 import Registration from "../pages/auth/Registration";
 import Courses from "../pages/courses/Courses";
+import CourseDetails from "../pages/course-details/CourseDetails";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ export const router = createBrowserRouter(
         <Route path="/auth" element={<Login />} />
         <Route path="/auth/registration" element={<Registration />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/course/:id" element={<CourseDetails />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </>

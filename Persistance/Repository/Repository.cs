@@ -2,6 +2,7 @@
 using Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -18,9 +19,9 @@ public class Repository<T> : IRepository<T> where T : class
 
 	public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
 	{
-		IQueryable<T> query = dbSet;	
+		IQueryable<T> query = dbSet;
 
-		if(includeProperties != null)
+		if (includeProperties != null)
 		{
 			foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
 			{

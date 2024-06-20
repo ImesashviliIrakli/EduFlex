@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRootContext } from "./useRootContext";
 import { fetchData } from "../functions/fetchData";
 
-export const useGetAll = (queryKey, urlParam) => {
+export const useGet = (queryKey, urlParam) => {
   const { baseUrl } = useRootContext();
 
   const query = useQuery({

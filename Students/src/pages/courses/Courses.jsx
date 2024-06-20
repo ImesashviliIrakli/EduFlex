@@ -1,26 +1,29 @@
 import "./courses.css";
-import { useGetAll } from "../../hooks/useGetAll";
+import { useNavigate } from "react-router-dom";
+import { useGet } from "../../hooks/useGet";
+import { CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
 import Loader from "../../components/loader/Loader";
 
 function Courses() {
-  const { data: courses, isLoading } = useGetAll(
-    ["Courses"],
-    "/api/course/get"
-  );
+  const navigate = useNavigate();
+
+  const { data: courses, isLoading } = useGet(["Courses"], "/api/course/get");
 
   if (isLoading) return <Loader />;
-
-  console.log(courses.result);
   return (
     <div className="courses">
       <div className="courses-container d-flex justify-content-center align-items-center flex-wrap">
         {courses?.result.map((course) => (
-          <Card key={course.id} sx={{ maxWidth: 345 }} className="course-card">
+          <Card
+            key={course.id}
+            sx={{ maxWidth: 345 }}
+            className="course-card"
+            onClick={() => navigate(`/course/${course.id}`)}
+          >
             <CardActionArea>
               <CardMedia
                 component="img"

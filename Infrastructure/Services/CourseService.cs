@@ -51,7 +51,7 @@ namespace Infrastructure.Services
 
 		public async Task<IEnumerable<CourseDto>> GetAllAsync()
 		{
-			var courses = await _courseRepository.GetAllAsync();
+			var courses = await _courseRepository.GetAllAsync(includeProperties: "Faculty");
 			var result = _mapper.Map<IEnumerable<CourseDto>>(courses);
 
 			return result;
@@ -59,7 +59,7 @@ namespace Infrastructure.Services
 
 		public async Task<CourseDto> GetByIdAsync(int id)
 		{
-			var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id);
+			var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id, includeProperties: "Faculty");
 			var result = _mapper.Map<CourseDto>(course);
 
 			return result;
