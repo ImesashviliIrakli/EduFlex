@@ -1,10 +1,6 @@
 import "./auth.css";
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useRootContext } from "../../hooks/useRootContext";
-import { useAlertBarContext } from "../../hooks/useAlertBarContext";
-import { fetchData } from "../../functions/fetchData";
-import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Box,
   IconButton,
@@ -18,48 +14,14 @@ import {
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import LoginIcon from "@mui/icons-material/Login";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
-
-  const { baseUrl } = useRootContext();
-  const {
-    snackbarStatus,
-    setSnackbarStat,
-    setSnackbarMessage,
-    handleSnackbarOpen,
-  } = useAlertBarContext();
-
-  const mutation = useMutation({
-    mutationKey: "login",
-    mutationFn: (loginData) =>
-      fetchData({
-        url: baseUrl + "/api/auth/login",
-        method: "post",
-        data: JSON.stringify(loginData),
-      }),
-    onSuccess: (data) => {
-      sessionStorage.setItem("userData", JSON.stringify(data.result));
-      sessionStorage.setItem("token", JSON.stringify(data.result.token));
-      sessionStorage.setItem("login", "true");
-      handleSnackbarOpen();
-      setSnackbarStat(snackbarStatus.success);
-      setSnackbarMessage("Logged in Successfully!");
-      setTimeout(() => navigate("/courses"), 2500);
-    },
-    onError: (error) => {
-      sessionStorage.removeItem("userData");
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("login");
-      handleSnackbarOpen();
-      setSnackbarStat(snackbarStatus.error);
-      setSnackbarMessage(error.data?.Result?.Message || "An Error Occured");
-    },
-  });
+  const { mutate } = useAuth(["login"], "/api/auth/login", "login");
 
   const handleShowPassword = () => setShowPassword((show) => !show);
 
@@ -69,7 +31,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutation.mutate({ email, password });
+    mutate({ email, password });
   };
 
   return (

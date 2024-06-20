@@ -9,7 +9,7 @@ function AlertBar() {
   return (
     <Snackbar
       open={snackbar}
-      autoHideDuration={2000}
+      autoHideDuration={1500}
       onClose={handleSnackbarClose}
     >
       <Alert
