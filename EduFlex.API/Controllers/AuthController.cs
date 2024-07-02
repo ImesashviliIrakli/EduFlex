@@ -27,10 +27,10 @@ public class AuthController : ControllerBase
         return Ok(_response);
     }
 
-    [HttpPost("registeradmin")]
+    [HttpPost("addUserByAdmin")]
     [Authorize(Roles = "Admin")]
 
-    public async Task<IActionResult> RegisterAdmin(RegistrationRequest request)
+    public async Task<IActionResult> AddUserByAdmin(RegistrationRequest request)
     {
         _response.Result = await _authenticationService.Register(request);
         return Ok(_response);
