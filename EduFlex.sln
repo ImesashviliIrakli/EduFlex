@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "Identity\Identi
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "students", "Students\students.esproj", "{BF19CFBE-464F-488D-A8B4-8264461B8F30}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "adminportal", "adminportal\adminportal.esproj", "{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,12 @@ Global
 		{BF19CFBE-464F-488D-A8B4-8264461B8F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF19CFBE-464F-488D-A8B4-8264461B8F30}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF19CFBE-464F-488D-A8B4-8264461B8F30}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +87,7 @@ Global
 		{E6DD6ECF-5817-446C-AE9F-E463DB2D34B1} = {C11D4C3A-D644-46E6-A10B-06946888EFE5}
 		{0143B574-EB52-4466-A7C1-9ABDE00A5FDB} = {39FF6E29-FE19-4E3A-B72D-82DFA105C187}
 		{BF19CFBE-464F-488D-A8B4-8264461B8F30} = {E6DD6ECF-5817-446C-AE9F-E463DB2D34B1}
+		{D81AAD76-8A54-4DDC-A6D8-530A5AD74B3D} = {E6DD6ECF-5817-446C-AE9F-E463DB2D34B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2ADBC75-060D-4593-BDCE-9AF3F1BC70DA}
