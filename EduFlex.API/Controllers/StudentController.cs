@@ -22,7 +22,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Student,Teacher,Admin")]
+    [Authorize(Roles = "Teacher,Admin")]
     public async Task<IActionResult> Get()
     {
         _response.Result = await _service.GetAllAsync();

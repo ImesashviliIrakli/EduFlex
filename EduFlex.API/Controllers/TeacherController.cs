@@ -22,6 +22,7 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Get()
     {
         _response.Result = await _service.GetAllAsync();
