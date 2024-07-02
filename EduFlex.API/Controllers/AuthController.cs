@@ -4,6 +4,7 @@ using EduFlex.API.Enums;
 using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace EduFlex.API.Controllers;
 
@@ -23,6 +24,15 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(AuthRequest request)
     {
         _response.Result = await _authenticationService.Login(request);
+        return Ok(_response);
+    }
+
+    [HttpPost("registeradmin")]
+    [Authorize(Roles = "Admin")]
+
+    public async Task<IActionResult> RegisterAdmin(RegistrationRequest request)
+    {
+        _response.Result = await _authenticationService.Register(request);
         return Ok(_response);
     }
 
