@@ -4,7 +4,6 @@ using EduFlex.API.Enums;
 using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace EduFlex.API.Controllers;
 
@@ -12,34 +11,34 @@ namespace EduFlex.API.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authenticationService;
-    private ResponseModel _response;
-    public AuthController(IAuthService authenticationService)
-    {
-        _authenticationService = authenticationService;
-        _response = new ResponseModel(Status.Success, "Success");
-    }
+	private readonly IAuthService _authenticationService;
+	private ResponseModel _response;
+	public AuthController(IAuthService authenticationService)
+	{
+		_authenticationService = authenticationService;
+		_response = new ResponseModel(Status.Success, "Success");
+	}
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(AuthRequest request)
-    {
-        _response.Result = await _authenticationService.Login(request);
-        return Ok(_response);
-    }
+	[HttpPost("login")]
+	public async Task<IActionResult> Login(AuthRequest request)
+	{
+		_response.Result = await _authenticationService.Login(request);
+		return Ok(_response);
+	}
 
-    [HttpPost("addUserByAdmin")]
-    [Authorize(Roles = "Admin")]
+	[HttpPost("addUserByAdmin")]
+	[Authorize(Roles = "Admin")]
 
-    public async Task<IActionResult> AddUserByAdmin(RegistrationRequest request)
-    {
-        _response.Result = await _authenticationService.Register(request);
-        return Ok(_response);
-    }
+	public async Task<IActionResult> AddUserByAdmin(RegistrationRequest request)
+	{
+		_response.Result = await _authenticationService.Register(request);
+		return Ok(_response);
+	}
 
-    [HttpPost("register")]
-    public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
-    {
-        _response.Result = await _authenticationService.Register(request);
-        return Ok(_response);
-    }
+	[HttpPost("register")]
+	public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
+	{
+		_response.Result = await _authenticationService.Register(request);
+		return Ok(_response);
+	}
 }
