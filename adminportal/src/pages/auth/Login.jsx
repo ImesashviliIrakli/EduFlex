@@ -1,6 +1,6 @@
 import "./auth.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import {
   Box,
   IconButton,
@@ -13,8 +13,6 @@ import {
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import LoginIcon from "@mui/icons-material/Login";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -79,12 +77,6 @@ function Login() {
             <Button variant="contained" endIcon={<LoginIcon />} type="submit">
               Login
             </Button>
-            <span>or</span>
-            <Link to="/auth/registration">
-              <Button variant="outlined" endIcon={<AccountCircleIcon />}>
-                Register
-              </Button>
-            </Link>
           </Box>
         </Box>
       </div>

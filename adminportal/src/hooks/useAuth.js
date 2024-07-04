@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useRootContext } from "./useRootContext";
 import { useAlertBarContext } from "./useAlertBarContext";
-import { fetchData } from "../functions/fetchData";
+import { auth } from "../functions/auth";
 
 export const useAuth = (mutationKey, urlParam, authType = "login") => {
   const { baseUrl } = useRootContext();
@@ -21,7 +21,7 @@ export const useAuth = (mutationKey, urlParam, authType = "login") => {
       const mutation = useMutation({
         mutationKey: mutationKey,
         mutationFn: (authData) =>
-          fetchData({
+          auth({
             url: baseUrl + urlParam,
             method: "post",
             data: JSON.stringify(authData),
@@ -38,7 +38,7 @@ export const useAuth = (mutationKey, urlParam, authType = "login") => {
             `${authType === "login" ? "Logged in" : "Registered"} Successfully!`
           );
           setTimeout(
-            () => navigate(`${authType === "login" ? "/home" : "/"}`),
+            () => navigate(`${authType === "login" ? "/dashboard" : "/"}`),
             2000
           );
         },

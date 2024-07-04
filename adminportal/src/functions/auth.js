@@ -1,11 +1,10 @@
 import axios from "axios";
 
-export async function fetchData(config) {
-  try {
+export async function auth(config) {
+   try {
     const response = await axios({
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${JSON.parse(sessionStorage.getItem("token"))}`,
       },
       ...config,
     });

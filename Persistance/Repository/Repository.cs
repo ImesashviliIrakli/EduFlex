@@ -54,24 +54,24 @@ public class Repository<T> : IRepository<T> where T : class
 	public async Task<T> AddAsync(T entity)
 	{
 		await dbSet.AddAsync(entity);
-        await _db.SaveChangesAsync();
+		await _db.SaveChangesAsync();
 
 		return entity;
-    }
+	}
 
-    public async Task<bool> DeleteAsync(int id)
+	public async Task<bool> DeleteAsync(int id)
 	{
 		var entity = await dbSet.FindAsync(id);
 
 		if (entity != null)
 		{
 			dbSet.Remove(entity);
-            await _db.SaveChangesAsync();
+			await _db.SaveChangesAsync();
 			return true;
-        }
+		}
 
 		return false;
-    }
+	}
 
 	public async Task<T> UpdateAsync(int id, T entity)
 	{
@@ -82,9 +82,9 @@ public class Repository<T> : IRepository<T> where T : class
 			dbSet.Update(entity);
 			await _db.SaveChangesAsync();
 
-            return entity;
-        }
+			return entity;
+		}
 
 		throw new BadRequestException($"Could not find entity to update");
-    }
+	}
 }

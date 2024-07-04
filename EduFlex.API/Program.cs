@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using Persistance;
 using Serilog;
 using Infrastructure;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

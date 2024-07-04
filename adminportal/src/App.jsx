@@ -13,20 +13,20 @@ const queryClient = new QueryClient();
 
 function App() {
     return (
-        <>
-            <QueryClientProvider client={queryClient}>
-                <RootContextProvider>
-                    <AlertBarContextProvider>
-                        <RouterProvider router={router} />
-                        <AlertBar />
-                    </AlertBarContextProvider>
-                </RootContextProvider>
-                <ReactQueryDevtools
-                    initialIsOpen={false}
-                    buttonPosition="bottom-left"
-                />
-            </QueryClientProvider>
-        </>
+      <>
+        <QueryClientProvider client={queryClient}>
+          <RootContextProvider>
+            <AlertBarContextProvider>
+              <RouterProvider router={router} />
+              <AlertBar />
+            </AlertBarContextProvider>
+          </RootContextProvider>
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="bottom-left"
+          />
+        </QueryClientProvider>
+      </>
     );
 }
 
