@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Exceptions;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Models.Dtos.FacultyDtos;
 using AutoMapper;
@@ -67,6 +68,11 @@ namespace Infrastructure.Services
 
 		public async Task<FacultyDto> UpdateAsync(int id, UpdateFacultyDto entity)
 		{
+			var check =  await _facultyRepository.GetById(id);
+
+			if (check == null)
+				throw new NotFoundException($"Could not find faculty with id:{id}");
+
 			var faculty = _mapper.Map<Faculty>(entity);
 
 			var update = await _facultyRepository.UpdateAsync(id, faculty);

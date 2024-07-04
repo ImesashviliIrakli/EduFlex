@@ -9,82 +9,75 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace Persistance.Repository;
 public class Repository<T> : IRepository<T> where T : class
 {
-	private readonly AppDBContext _db;
-	private DbSet<T> dbSet;
-	public Repository(AppDBContext db)
-	{
-		_db = db;
-		this.dbSet = _db.Set<T>();
-	}
+    private readonly AppDBContext _db;
+    private DbSet<T> dbSet;
+    public Repository(AppDBContext db)
+    {
+        _db = db;
+        this.dbSet = _db.Set<T>();
+    }
 
-	public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
-	{
-		IQueryable<T> query = dbSet;
+    public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
+    {
+        IQueryable<T> query = dbSet;
 
-		if (includeProperties != null)
-		{
-			foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-			{
-				query = query.Include(includeProp);
-			}
-		}
+        if (includeProperties != null)
+        {
+            foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProp);
+            }
+        }
 
-		return await query.ToListAsync();
-	}
+        return await query.ToListAsync();
+    }
 
-	public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
-	{
-		IQueryable<T> query = dbSet;
+    public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+    {
+        IQueryable<T> query = dbSet;
 
-		if (filter != null)
-		{
-			query = query.Where(filter);
-		}
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
 
-		if (includeProperties != null)
-		{
-			foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-			{
-				query = query.Include(includeProp);
-			}
-		}
+        if (includeProperties != null)
+        {
+            foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProp);
+            }
+        }
 
-		return await query.FirstOrDefaultAsync();
-	}
-	public async Task<T> AddAsync(T entity)
-	{
-		await dbSet.AddAsync(entity);
+        return await query.FirstOrDefaultAsync();
+    }
+    public async Task<T> AddAsync(T entity)
+    {
+        await dbSet.AddAsync(entity);
         await _db.SaveChangesAsync();
 
-		return entity;
+        return entity;
     }
 
     public async Task<bool> DeleteAsync(int id)
-	{
-		var entity = await dbSet.FindAsync(id);
+    {
+        var entity = await dbSet.FindAsync(id);
 
-		if (entity != null)
-		{
-			dbSet.Remove(entity);
+        if (entity != null)
+        {
+            dbSet.Remove(entity);
             await _db.SaveChangesAsync();
-			return true;
+            return true;
         }
 
-		return false;
+        return false;
     }
 
-	public async Task<T> UpdateAsync(int id, T entity)
-	{
-		var check = await dbSet.FindAsync(id);
+    public async Task<T> UpdateAsync(int id, T entity)
+    {
+        dbSet.Update(entity);
+        await _db.SaveChangesAsync();
 
-		if(check != null)
-		{
-			dbSet.Update(entity);
-			await _db.SaveChangesAsync();
-
-            return entity;
-        }
-
-		throw new BadRequestException($"Could not find entity to update");
+        return entity;
     }
 }
