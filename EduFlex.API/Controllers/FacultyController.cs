@@ -53,6 +53,7 @@ namespace EduFlex.API.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Put(int id, [FromBody] UpdateFacultyDto entity)
 		{
+			entity.Id = id;
 			_response.Result = await _service.UpdateAsync(id, entity);
 			return Ok(_response);
 		}

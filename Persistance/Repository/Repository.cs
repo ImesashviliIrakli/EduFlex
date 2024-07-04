@@ -62,7 +62,6 @@ public class Repository<T> : IRepository<T> where T : class
 	public async Task<bool> DeleteAsync(int id)
 	{
 		var entity = await dbSet.FindAsync(id);
-
 		if (entity != null)
 		{
 			dbSet.Remove(entity);
@@ -75,16 +74,10 @@ public class Repository<T> : IRepository<T> where T : class
 
 	public async Task<T> UpdateAsync(int id, T entity)
 	{
-		var check = await dbSet.FindAsync(id);
+		dbSet.Update(entity);
+		await _db.SaveChangesAsync();
 
-		if(check != null)
-		{
-			dbSet.Update(entity);
-			await _db.SaveChangesAsync();
-
-			return entity;
-		}
+		return entity;
 
 		throw new BadRequestException($"Could not find entity to update");
 	}
-}
