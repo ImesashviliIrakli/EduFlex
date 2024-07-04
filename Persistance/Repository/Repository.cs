@@ -81,3 +81,4 @@ public class Repository<T> : IRepository<T> where T : class
 
 		throw new BadRequestException($"Could not find entity to update");
 	}
+}
