@@ -39,7 +39,7 @@ function CreateFaculty() {
             setSnackbarMessage("Faculty Created Successfully!");
             setTimeout(() => {
                 navigate("/faculties");
-            }
+            },1000)
         },
         onError: () => {
             handleSnackbarOpen();
