@@ -38,29 +38,7 @@ function Users() {
             sorter: {
                 compare: (a, b) => a.email.localeCompare(b.email),
             },
-        },
-        {
-            title: "Action",
-            key: "action",
-            render: (data) => (
-                <>
-                    <IconButton
-                        aria-label="edit"
-                        color="success"
-                        onClick={() => navigate(`/edit-faculty/${data.id}`)}
-                    >
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton
-                        aria-label="delete"
-                        color="error"
-                    // onClick={() => navigate(`/edit-faculty/${data.id}`)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                </>
-            ),
-        },
+        }
     ];
 
     const onChange = (pagination, filters, sorter, extra) => {
@@ -88,6 +66,9 @@ function Users() {
                     </ToggleButton>
                     <ToggleButton value="Student" aria-label="student">
                         Student
+                    </ToggleButton>
+                    <ToggleButton value="Admin" aria-label="admin">
+                        Admin
                     </ToggleButton>
                 </ToggleButtonGroup>
             </div>
