@@ -41,4 +41,12 @@ public class AuthController : ControllerBase
 		_response.Result = await _authenticationService.Register(request);
 		return Ok(_response);
 	}
+
+	[HttpGet("getusers/{roleName}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetUsers(string roleName)
+	{
+		_response.Result = await _authenticationService.GetUsers(roleName);
+		return Ok(_response);
+	}
 }

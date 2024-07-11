@@ -22,7 +22,7 @@ public class TeacherCourseController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Teacher,Student,Admin")]
+    [AllowAnonymous]
     public async Task<IActionResult> Get()
     {
         _response.Result = await _service.GetAllAsync();
@@ -30,7 +30,7 @@ public class TeacherCourseController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Teacher,Student,Admin")]
+    [AllowAnonymous]
     public async Task<IActionResult> Get(int id)
     {
         _response.Result = await _service.GetByIdAsync(id);

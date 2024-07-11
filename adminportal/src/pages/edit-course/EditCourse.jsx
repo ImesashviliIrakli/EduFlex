@@ -1,10 +1,10 @@
-import "./create-course.css";
-import { useState } from "react";
-import { useGet } from "../../hooks/useGet";
+import "./edit-course.css";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useRootContext } from "../../hooks/useRootContext";
 import { useAlertBarContext } from "../../hooks/useAlertBarContext";
+import { useGet } from "../../hooks/useGet";
 import { fetchData } from "../../functions/fetchData";
 import {
     Box,
@@ -17,9 +17,10 @@ import {
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
-function CreateCourse() {
-    const { data: faculties, isLoading } = useGet(["Faculties"], "/api/faculty/get");
+function EditCourse() {
+    const courseId = window.location.pathname.split("/")[2];
 
+    const [id, setId] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
@@ -29,7 +30,6 @@ function CreateCourse() {
     const navigate = useNavigate();
 
     const { baseUrl } = useRootContext();
-
     const {
         snackbarStatus,
         setSnackbarStat,
@@ -37,38 +37,54 @@ function CreateCourse() {
         handleSnackbarOpen,
     } = useAlertBarContext();
 
+    const { data: courseById } = useGet(["course", courseId], `/api/course/${courseId}`);
+    const { data: faculties } = useGet(["Faculties"], "/api/faculty/get");
+
+    useEffect(() => {
+        if (courseById?.result !== null) {
+            setTitle(courseById?.result.title);
+            setDescription(courseById?.result.description);
+            setPrice(courseById?.result.price);
+            setImageUrl(courseById?.result.imageUrl);
+            setFacultyId(courseById?.result.faculty.id);
+            setId(courseById?.result.id);
+        }
+    }, [courseById?.result]);
+
     const mutation = useMutation({
-        mutationKey: ["Create Course"],
-        mutationFn: (newCourse) =>
+        mutationKey: ["Edit Course", courseId],
+        mutationFn: (editCourse) =>
             fetchData({
-                url: baseUrl + "/api/Course",
-                method: "post",
-                data: newCourse,
+                url: baseUrl + `/api/course`,
+                method: "put",
+                data: editCourse,
+                params: {
+                    id: parseInt(courseId),
+                },
             }),
         onSuccess: () => {
             handleSnackbarOpen();
             setSnackbarStat(snackbarStatus.success);
-            setSnackbarMessage("Course Created Successfully!");
+            setSnackbarMessage("Course Updated Successfully!");
             setTimeout(() => {
                 navigate("/courses");
             }, 1000);
         },
         onError: () => {
             handleSnackbarOpen();
-            console.log(snackbarStatus);
             setSnackbarStat(snackbarStatus.error);
-            setSnackbarMessage("Course Creation Failed!");
+            setSnackbarMessage("Course Update Failed!");
         },
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        mutation.mutate({ title, description, price, imageUrl, facultyId });
+        mutation.mutate({ id, title, description, price, imageUrl, facultyId });
     };
 
     return (
-        <div className="create-course">
-            <h1>Create Course</h1>
+        <div className="edit-course">
+            <h1>Edit Course</h1>
             <Box component="form" className="p-3" onSubmit={handleSubmit}>
                 <TextField
                     required
@@ -120,7 +136,7 @@ function CreateCourse() {
                 </FormControl>
                 <Box mt={2}>
                     <Button variant="contained" startIcon={<AddIcon />} type="submit">
-                        Create
+                        Update
                     </Button>
                     <Button variant="outlined" onClick={() => navigate("/courses")}>
                         Go Back
@@ -131,4 +147,4 @@ function CreateCourse() {
     );
 }
 
-export default CreateCourse;
+export default EditCourse;

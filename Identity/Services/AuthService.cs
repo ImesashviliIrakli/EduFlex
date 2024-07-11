@@ -2,6 +2,7 @@
 using Application.Interfaces.Services;
 using Application.Models.Auth;
 using Application.Options;
+using Domain;
 using Identity.Data;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,12 @@ public class AuthService : IAuthService
         _roleManager = roleManager;
         _jwtOptions = jwtOptions.Value;
         _logger = logger;
+    }
+
+    public async Task<List<UserDto>> GetUsers(string roleName)
+    {
+        var usersInRole = await _userManager.GetUsersInRoleAsync(roleName);
+        return usersInRole.ToUserDtoList();
     }
 
     public async Task<AuthResponse> Login(AuthRequest request)
