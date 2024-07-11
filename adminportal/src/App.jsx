@@ -8,26 +8,27 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import RootContextProvider from "./context/RootContextProvider";
 import AlertBarContextProvider from "./context/AlertBarContextProvider";
 import AlertBar from "./components/alertbar/AlertBar";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
 function App() {
-    return (
-      <>
-        <QueryClientProvider client={queryClient}>
-          <RootContextProvider>
-            <AlertBarContextProvider>
-              <RouterProvider router={router} />
-              <AlertBar />
-            </AlertBarContextProvider>
-          </RootContextProvider>
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            buttonPosition="bottom-left"
-          />
-        </QueryClientProvider>
-      </>
-    );
+  return (
+    <>
+      <QueryClientProvider client={queryClient}>
+        <RootContextProvider>
+          <AlertBarContextProvider>
+            <RouterProvider router={router} />
+            <AlertBar />
+          </AlertBarContextProvider>
+        </RootContextProvider>
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          buttonPosition="bottom-left"
+        />
+      </QueryClientProvider>
+    </>
+  );
 }
 
 export default App;

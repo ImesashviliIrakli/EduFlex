@@ -1,6 +1,6 @@
 import "./root-layout.css";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
@@ -27,6 +27,14 @@ function RootLayout(props) {
     const auth = sessionStorage.getItem("login");
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+      if(sessionStorage.getItem("login") !== "true") {
+        sessionStorage.removeItem("userData");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("login");
+      }
+    }, [sessionStorage.getItem("login")])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);

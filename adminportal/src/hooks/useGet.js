@@ -12,7 +12,7 @@ export const useGet = (queryKey, urlParam) => {
         url: baseUrl + urlParam,
         method: "get",
       }),
-    staleTime: 10000,
+    // staleTime: 10000,
   });
 
   return query;
