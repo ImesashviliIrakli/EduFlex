@@ -42,6 +42,8 @@ public class TeacherCourseController : ControllerBase
     {
         body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+        ModelStateValidator.ValidateModelState(ModelState);
+
         _response.Result = await _service.AddAsync(body);
         return Ok(_response);
     }
@@ -50,6 +52,8 @@ public class TeacherCourseController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ModelStateValidator.ValidateModelState(ModelState);
 
         _response.Result = await _service.DeleteAsync(id, userId);
         return Ok(_response);

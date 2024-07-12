@@ -1,11 +1,19 @@
-﻿namespace Application.Models.Dtos.CourseDtos;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Application.Models.Dtos.CourseDtos;
 
 public class UpdateCourseDto
 {
+	[Required]
 	public int Id { get; set; }
-	public string Title { get; set; }
-	public string Description { get; set; }
-	public int Price { get; set; }
-	public string ImageUrl { get; set; }
-	public int FacultyId { get; set; }
+    [Required]
+    public string Title { get; set; }
+    [Required]
+    public string Description { get; set; }
+    [Required]
+    public int Price { get; set; }
+    [Required]
+    public string ImageUrl { get; set; }
+    [Required]
+    public int FacultyId { get; set; }
 }

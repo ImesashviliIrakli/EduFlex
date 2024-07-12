@@ -1,6 +1,7 @@
 ﻿using Application.Exceptions;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json;
 
@@ -33,7 +34,7 @@ public class ExceptionMiddleware
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-
+        string message = exception.Message;
         switch (exception) 
         {
             case NotFoundException:
@@ -41,6 +42,10 @@ public class ExceptionMiddleware
                 break;
             case BadRequestException:
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                break;
+            case Application.Exceptions.ValidationException validationException:
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                message = string.Join("\n", validationException.Errors);
                 break;
             default:
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -50,7 +55,7 @@ public class ExceptionMiddleware
         var errorDetails = new ErrorDetails 
         {
             StatusCode = context.Response.StatusCode,
-            Message = exception.Message
+            Message = message
         };
 
         var responseModel = new ResponseModel(Status.Error, "Exception", errorDetails);

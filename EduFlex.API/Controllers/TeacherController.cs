@@ -41,7 +41,9 @@ public class TeacherController : ControllerBase
 	{
 		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		_response.Result = await _service.AddAsync(body);
+        ModelStateValidator.ValidateModelState(ModelState);
+
+        _response.Result = await _service.AddAsync(body);
 		return Ok(_response);
 	}
 
@@ -50,7 +52,9 @@ public class TeacherController : ControllerBase
 	{
 		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		_response.Result = await _service.UpdateAsync(body.Id, body);
+        ModelStateValidator.ValidateModelState(ModelState);
+
+        _response.Result = await _service.UpdateAsync(body.Id, body);
 		return Ok(_response);
 	}
 

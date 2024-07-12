@@ -43,7 +43,9 @@ public class StudentController : ControllerBase
 		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 		body.Email = User.FindFirstValue(ClaimTypes.Email);
 
-		_response.Result = await _service.AddAsync(body);
+        ModelStateValidator.ValidateModelState(ModelState);
+
+        _response.Result = await _service.AddAsync(body);
 		return Ok(_response);
 	}
 
@@ -53,7 +55,9 @@ public class StudentController : ControllerBase
 		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 		body.Email = User.FindFirstValue(ClaimTypes.Email);
 
-		_response.Result = await _service.UpdateAsync(body.Id, body);
+        ModelStateValidator.ValidateModelState(ModelState);
+
+        _response.Result = await _service.UpdateAsync(body.Id, body);
 		return Ok(_response);
 	}
 

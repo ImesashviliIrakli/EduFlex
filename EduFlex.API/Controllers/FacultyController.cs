@@ -39,6 +39,8 @@ namespace EduFlex.API.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Post([FromBody] AddFacultyDto entity)
 		{
+			ModelStateValidator.ValidateModelState(ModelState);
+
 			_response.Result = await _service.AddAsync(entity);
 			return Ok(_response);
 		}
@@ -54,7 +56,10 @@ namespace EduFlex.API.Controllers
 		public async Task<IActionResult> Put(int id, [FromBody] UpdateFacultyDto entity)
 		{
 			entity.Id = id;
-			_response.Result = await _service.UpdateAsync(id, entity);
+
+            ModelStateValidator.ValidateModelState(ModelState);
+
+            _response.Result = await _service.UpdateAsync(id, entity);
 			return Ok(_response);
 		}
 	}

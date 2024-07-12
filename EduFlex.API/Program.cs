@@ -9,6 +9,7 @@ using Serilog;
 using Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +60,11 @@ builder.Services.AddCors(options =>
 
 builder.Host.UseSerilog((context, loggerConfig) =>
 	loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 var app = builder.Build();
 

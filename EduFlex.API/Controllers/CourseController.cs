@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Exceptions;
+using Application.Interfaces.Services;
 using Application.Models.Dtos.CourseDtos;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
@@ -39,7 +40,9 @@ namespace EduFlex.API.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Post([FromBody] AddCourseDto entity)
 		{
-			_response.Result = await _service.AddAsync(entity);
+			ModelStateValidator.ValidateModelState(ModelState);
+
+            _response.Result = await _service.AddAsync(entity);
 			return Ok(_response);
 		}
 
@@ -53,7 +56,9 @@ namespace EduFlex.API.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Put(int id, [FromBody] UpdateCourseDto entity)
 		{
-			_response.Result = await _service.UpdateAsync(id, entity);
+            ModelStateValidator.ValidateModelState(ModelState);
+
+            _response.Result = await _service.UpdateAsync(id, entity);
 			return Ok(_response);
 		}
 	}
