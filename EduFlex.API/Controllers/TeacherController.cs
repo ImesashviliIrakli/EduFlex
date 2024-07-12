@@ -40,6 +40,7 @@ public class TeacherController : ControllerBase
 	public async Task<IActionResult> Post([FromBody] AddTeacherDto body)
 	{
 		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        body.Email = User.FindFirstValue(ClaimTypes.Email);
 
         ModelStateValidator.ValidateModelState(ModelState);
 
@@ -51,6 +52,7 @@ public class TeacherController : ControllerBase
 	public async Task<IActionResult> Put([FromBody] UpdateTeacherDto body)
 	{
 		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        body.Email = User.FindFirstValue(ClaimTypes.Email);
 
         ModelStateValidator.ValidateModelState(ModelState);
 
