@@ -7,6 +7,8 @@ public class AddTeacherDto
 {
     [JsonIgnore]
     public string UserId { get; set; }
+    [JsonIgnore]
+    public required string Email { get; set; }
     [Required]
     public required string FirstName { get; set; }
     [Required]

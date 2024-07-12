@@ -59,7 +59,7 @@ public class TeacherCourseService : ITeacherCourseService
 
     public async Task<IEnumerable<TeacherCourseDto>> GetAllAsync()
     {
-        var teacherCourses = await _teacherCourseRepository.GetAllAsync();
+        var teacherCourses = await _teacherCourseRepository.GetAllAsync("Teacher,Course,Course.Faculty");
         return _mapper.Map<IEnumerable<TeacherCourseDto>>(teacherCourses);
     }
 
