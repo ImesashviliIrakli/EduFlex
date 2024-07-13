@@ -38,7 +38,29 @@ function Users() {
             sorter: {
                 compare: (a, b) => a.email.localeCompare(b.email),
             },
-        }
+        },
+        {
+            title: "Action",
+            key: "action",
+            render: (data) => (
+                <>
+                    <IconButton
+                        aria-label="edit"
+                        color="success"
+                        onClick={() => navigate(`/edit-user/${data.id}`)}
+                    >
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => console.log('Delete user', data.id)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                </>
+            ),
+        },
     ];
 
     const onChange = (pagination, filters, sorter, extra) => {
@@ -49,19 +71,24 @@ function Users() {
         <div className="users">
             <div className="users-header d-flex align-items-center justify-content-between">
                 <h1>Users</h1>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate("/create-user")}>
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => navigate("/create-user")}
+                    color="success"
+                >
                     Create User
                 </Button>
             </div>
 
-            <div className="usertable-filter d-flex align-items-center justify-content-between">
+            <div className="usertable-filter d-flex align-items-center justify-content-between my-3">
                 <ToggleButtonGroup
                     value={role}
                     exclusive
                     onChange={handleRoleChange}
                     aria-label="role selection"
                 >
-                    <ToggleButton value="Teacher" aria-label="teacher">
+                    <ToggleButton value="Teacher" aria-label="teacher"s>
                         Teacher
                     </ToggleButton>
                     <ToggleButton value="Student" aria-label="student">
@@ -84,7 +111,7 @@ function Users() {
                 }}
             />
         </div>
-    )
+    );
 }
 
 export default Users;

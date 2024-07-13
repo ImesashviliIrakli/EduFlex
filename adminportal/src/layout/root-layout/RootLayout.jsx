@@ -97,7 +97,7 @@ function RootLayout(props) {
 
     return (
         <div className="root-layout" id="top">
-            <AppBar>
+            <AppBar sx={{ backgroundColor: "#04023a"}}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -116,7 +116,7 @@ function RootLayout(props) {
                                 textDecoration: "none",
                             }}
                         >
-                            LOGO
+                            EduFlex
                         </Typography>
 
                         {auth === "true" && (
@@ -150,19 +150,19 @@ function RootLayout(props) {
                                     }}
                                 >
                                     <MenuItem onClick={handleCloseNavMenu}>
-                                        <NavLink to={"/dashboard"}>Dashboard</NavLink>
+                                        <NavLink to={"/dashboard"} className="nav-link">Dashboard</NavLink>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseNavMenu}>
-                                        <NavLink to={"/courses"}>Courses</NavLink>
+                                        <NavLink to={"/courses"} className="nav-link">Courses</NavLink>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseNavMenu}>
-                                        <NavLink to={"/faculties"}>Faculties</NavLink>
+                                        <NavLink to={"/faculties"} className="nav-link">Faculties</NavLink>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseNavMenu}>
-                                        <NavLink to={"/users"}>Users</NavLink>
+                                        <NavLink to={"/users"} className="nav-link">Users</NavLink>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseNavMenu}>
-                                        <NavLink to={"/teacher-courses"}>TeacherCourses</NavLink>
+                                        <NavLink to={"/teacher-courses"} className="nav-link">TeacherCourses</NavLink>
                                     </MenuItem>
                                 </Menu>
                             </Box>
@@ -189,7 +189,7 @@ function RootLayout(props) {
                         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                             {auth === "true" && (
                                 <>
-                                    <NavLink to={"/dashboard"}>
+                                    <NavLink to={"/dashboard"} className="nav-link">
                                         <Button
                                             onClick={handleCloseNavMenu}
                                             sx={{ my: 2, color: "white", display: "block" }}
@@ -197,7 +197,7 @@ function RootLayout(props) {
                                             Dashboard
                                         </Button>
                                     </NavLink>
-                                    <NavLink to={"/courses"}>
+                                    <NavLink to={"/courses"} className="nav-link">
                                         <Button
                                             onClick={handleCloseNavMenu}
                                             sx={{ my: 2, color: "white", display: "block" }}
@@ -205,7 +205,7 @@ function RootLayout(props) {
                                             Courses
                                         </Button>
                                     </NavLink>
-                                    <NavLink to={"/faculties"}>
+                                    <NavLink to={"/faculties"} className="nav-link">
                                         <Button
                                             onClick={handleCloseNavMenu}
                                             sx={{ my: 2, color: "white", display: "block" }}
@@ -213,7 +213,7 @@ function RootLayout(props) {
                                             Faculties
                                         </Button>
                                     </NavLink>
-                                    <NavLink to={"/users"}>
+                                    <NavLink to={"/users"} className="nav-link">
                                         <Button
                                             onClick={handleCloseNavMenu}
                                             sx={{ my: 2, color: "white", display: "block" }}
@@ -221,7 +221,7 @@ function RootLayout(props) {
                                             Users
                                         </Button>
                                     </NavLink>
-                                    <NavLink to={"/teacher-courses"}>
+                                    <NavLink to={"/teacher-courses"} className="nav-link">
                                         <Button
                                             onClick={handleCloseNavMenu}
                                             sx={{ my: 2, color: "white", display: "block" }}

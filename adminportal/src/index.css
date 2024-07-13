@@ -3,8 +3,9 @@
 html,
 body,
 #root {
-    height: 100%;
-    width: 100%;
+	background: #f0f2f5;
+	height: 100%;
+	width: 100%;
 }
 
 @media print {

@@ -8,7 +8,6 @@ import InfoIcon from '@mui/icons-material/Info';
 
 function TeacherCourses() {
     const navigate = useNavigate();
-    const [role, setRole] = useState('Teacher');
     const { data: teacherCourses, isLoading } = useGet(["TeacherCourses"], `/api/TeacherCourse`);
 
     const columns = [
@@ -83,8 +82,8 @@ function TeacherCourses() {
     }));
 
     return (
-        <div className="teacherCourses">
-            <div className="teacherCourses-header d-flex align-items-center justify-content-between">
+        <div className="teacher-courses">
+            <div className="teacher-courses-header d-flex align-items-center justify-content-between">
                 <h1>Teacher Course Map</h1>
             </div>
 

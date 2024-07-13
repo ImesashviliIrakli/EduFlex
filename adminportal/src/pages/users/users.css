@@ -1,0 +1,40 @@
+.users {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.users-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.usertable-filter {
+    margin-bottom: 20px;
+}
+
+    .usertable-filter .MuiToggleButtonGroup-root {
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .usertable-filter .MuiToggleButton-root {
+        background-color: #e0e0e0;
+        color: #333;
+    }
+
+        .usertable-filter .MuiToggleButton-root.Mui-selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .usertable-filter .MuiToggleButton-root:hover {
+            background-color: #0056b3;
+            color: white;
+        }

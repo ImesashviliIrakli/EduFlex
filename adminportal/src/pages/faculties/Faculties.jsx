@@ -72,7 +72,7 @@ function Faculties() {
                 <>
                     <IconButton
                         aria-label="edit"
-                        color="success"
+                        color="primary"
                         onClick={() => navigate(`/edit-faculty/${data.id}`)}
                     >
                         <EditIcon />
@@ -97,7 +97,12 @@ function Faculties() {
         <div className="faculties">
             <div className="faculties-header d-flex align-items-center justify-content-between">
                 <h1>Faculties</h1>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate("/create-faculty")}>
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => navigate("/create-faculty")}
+                    color="success"
+                >
                     Create Faculty
                 </Button>
             </div>
@@ -116,4 +121,4 @@ function Faculties() {
     );
 }
 
-export default Faculties
+export default Faculties;

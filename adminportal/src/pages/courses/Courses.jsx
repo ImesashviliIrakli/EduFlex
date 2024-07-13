@@ -97,7 +97,7 @@ function Courses() {
                 <>
                     <IconButton
                         aria-label="edit"
-                        color="success"
+                        color="primary"
                         onClick={() => navigate(`/edit-course/${data.id}`)}
                     >
                         <EditIcon />
@@ -127,7 +127,7 @@ function Courses() {
         <div className="courses">
             <div className="courses-header d-flex align-items-center justify-content-between">
                 <h1>Courses</h1>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate("/create-course")}>
+                <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate("/create-course")} color="success">
                     Create Course
                 </Button>
             </div>
