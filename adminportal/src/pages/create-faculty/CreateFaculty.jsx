@@ -9,9 +9,14 @@ import {
     Box,
     TextField,
     Button,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Typography,
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 function CreateFaculty() {
     const [name, setName] = useState("");
 
@@ -55,22 +60,37 @@ function CreateFaculty() {
 
     return (
         <div className="create-faculty">
-            <h1>Create Faculty</h1>
-            <Box component="form" className="p-3" onSubmit={handleSubmit}>
-                <TextField
-                    required
-                    label="Name"
-                    value={name}
-                    onChange={(e) => {
-                        setName(e.target.value);
-                    }}
-                />
+            <Typography variant="h4" component="h1" gutterBottom>
+                Create Faculty
+            </Typography>
+            <Box component="form" className="p-3" onSubmit={handleSubmit} sx={{ backgroundColor: "#fff", padding: "20px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
+                
 
-                <Box mt={2}>
-                    <Button variant="contained" startIcon={<AddIcon />} type="submit">
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <TextField
+                        required
+                        label="Name"
+                        value={name}
+                        onChange={(e) => {
+                            setName(e.target.value);
+                        }}
+                    />
+                </FormControl>
+
+                <Box mt={2} display="flex" justifyContent="space-between">
+                    <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        type="submit"
+                        color="success"
+                    >
                         Create
                     </Button>
-                    <Button variant="outlined" onClick={() => navigate("/faculties")}>
+                    <Button
+                        variant="outlined"
+                        startIcon={<ArrowBackIcon />}
+                        onClick={() => navigate("/faculties")}
+                    >
                         Go Back
                     </Button>
                 </Box>

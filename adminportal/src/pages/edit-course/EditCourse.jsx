@@ -14,8 +14,10 @@ import {
     MenuItem,
     FormControl,
     InputLabel,
+    Typography,
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function EditCourse() {
     const courseId = window.location.pathname.split("/")[2];
@@ -84,8 +86,10 @@ function EditCourse() {
 
     return (
         <div className="edit-course">
-            <h1>Edit Course</h1>
-            <Box component="form" className="p-3" onSubmit={handleSubmit}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                Edit Course
+            </Typography>
+            <Box component="form" className="p-3" onSubmit={handleSubmit} sx={{ backgroundColor: "#fff", padding: "20px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                 <TextField
                     required
                     label="Title"
@@ -93,6 +97,7 @@ function EditCourse() {
                     onChange={(e) => setTitle(e.target.value)}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
                 <TextField
                     required
@@ -101,6 +106,7 @@ function EditCourse() {
                     onChange={(e) => setDescription(e.target.value)}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
                 <TextField
                     required
@@ -110,6 +116,7 @@ function EditCourse() {
                     onChange={(e) => setPrice(Number(e.target.value))}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
                 <TextField
                     required
@@ -118,8 +125,9 @@ function EditCourse() {
                     onChange={(e) => setImageUrl(e.target.value)}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
-                <FormControl fullWidth margin="normal">
+                <FormControl fullWidth margin="normal" variant="outlined">
                     <InputLabel>Faculty</InputLabel>
                     <Select
                         value={facultyId}
@@ -134,11 +142,19 @@ function EditCourse() {
                         ))}
                     </Select>
                 </FormControl>
-                <Box mt={2}>
-                    <Button variant="contained" startIcon={<AddIcon />} type="submit">
-                        Update
+                <Box mt={2} display="flex" justifyContent="space-between">
+                    <Button
+                        variant="contained"
+                        startIcon={<EditIcon />}
+                        type="submit"
+                    >
+                        Edit
                     </Button>
-                    <Button variant="outlined" onClick={() => navigate("/courses")}>
+                    <Button
+                        variant="outlined"
+                        startIcon={<ArrowBackIcon />}
+                        onClick={() => navigate("/courses")}
+                    >
                         Go Back
                     </Button>
                 </Box>

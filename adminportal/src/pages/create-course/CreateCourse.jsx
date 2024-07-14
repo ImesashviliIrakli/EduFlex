@@ -14,8 +14,10 @@ import {
     MenuItem,
     FormControl,
     InputLabel,
+    Typography,
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function CreateCourse() {
     const { data: faculties, isLoading } = useGet(["Faculties"], "/api/faculty/get");
@@ -68,8 +70,10 @@ function CreateCourse() {
 
     return (
         <div className="create-course">
-            <h1>Create Course</h1>
-            <Box component="form" className="p-3" onSubmit={handleSubmit}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                Create Course
+            </Typography>
+            <Box component="form" className="p-3" onSubmit={handleSubmit} sx={{ backgroundColor: "#fff", padding: "20px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                 <TextField
                     required
                     label="Title"
@@ -77,6 +81,7 @@ function CreateCourse() {
                     onChange={(e) => setTitle(e.target.value)}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
                 <TextField
                     required
@@ -85,6 +90,7 @@ function CreateCourse() {
                     onChange={(e) => setDescription(e.target.value)}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
                 <TextField
                     required
@@ -94,6 +100,7 @@ function CreateCourse() {
                     onChange={(e) => setPrice(Number(e.target.value))}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
                 <TextField
                     required
@@ -102,8 +109,9 @@ function CreateCourse() {
                     onChange={(e) => setImageUrl(e.target.value)}
                     fullWidth
                     margin="normal"
+                    variant="outlined"
                 />
-                <FormControl fullWidth margin="normal">
+                <FormControl fullWidth margin="normal" variant="outlined">
                     <InputLabel>Faculty</InputLabel>
                     <Select
                         value={facultyId}
@@ -118,11 +126,21 @@ function CreateCourse() {
                         ))}
                     </Select>
                 </FormControl>
-                <Box mt={2}>
-                    <Button variant="contained" startIcon={<AddIcon />} type="submit">
+                <Box mt={2} display="flex" justifyContent="space-between">
+                    <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        type="submit"
+                        color="success"
+                    >
                         Create
                     </Button>
-                    <Button variant="outlined" onClick={() => navigate("/courses")}>
+                    <Button
+                        variant="outlined"
+                        startIcon={<ArrowBackIcon />}
+                        onClick={() => navigate("/courses")}
+                        sx={{ borderColor: '#007bff', color: '#007bff', '&:hover': { borderColor: '#0056b3', color: '#0056b3' } }}
+                    >
                         Go Back
                     </Button>
                 </Box>

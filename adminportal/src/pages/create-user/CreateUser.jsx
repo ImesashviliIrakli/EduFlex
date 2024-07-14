@@ -11,10 +11,12 @@ import {
     Button,
     Select,
     MenuItem,
-    InputLabel,
     FormControl,
+    InputLabel,
+    Typography,
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function CreateUser() {
     const [email, setEmail] = useState("");
@@ -61,9 +63,11 @@ function CreateUser() {
     };
 
     return (
-        <div className="create-user">
-            <h1>Create User</h1>
-            <Box component="form" className="p-3" onSubmit={handleSubmit}>
+         <div className="create-user">
+            <Typography variant="h4" component="h1" gutterBottom>
+                Create Course
+            </Typography>
+            <Box component="form" className="p-3" onSubmit={handleSubmit} sx={{ backgroundColor: "#fff", padding: "20px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                 <TextField
                     required
                     label="Email"
@@ -100,11 +104,11 @@ function CreateUser() {
                         <MenuItem value="Teacher">Teacher</MenuItem>
                     </Select>
                 </FormControl>
-                <Box mt={2}>
-                    <Button variant="contained" startIcon={<AddIcon />} type="submit">
+                <Box mt={2} display="flex" justifyContent="space-between">
+                    <Button variant="contained" color="success" startIcon={<AddIcon />} type="submit">
                         Create
                     </Button>
-                    <Button variant="outlined" onClick={() => navigate("/users")}>
+                    <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate("/users")}>
                         Go Back
                     </Button>
                 </Box>
