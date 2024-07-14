@@ -164,6 +164,9 @@ function RootLayout(props) {
                                     <MenuItem onClick={handleCloseNavMenu}>
                                         <NavLink to={"/teacher-courses"} className="nav-link">TeacherCourses</NavLink>
                                     </MenuItem>
+                                    <MenuItem onClick={handleCloseNavMenu}>
+                                        <NavLink to={"/enrollments"} className="nav-link">Enrollments</NavLink>
+                                    </MenuItem>
                                 </Menu>
                             </Box>
                         )}
@@ -227,6 +230,14 @@ function RootLayout(props) {
                                             sx={{ my: 2, color: "white", display: "block" }}
                                         >
                                             TeacherCourses
+                                        </Button>
+                                    </NavLink>
+                                    <NavLink to={"/enrollments"} className="nav-link">
+                                        <Button
+                                            onClick={handleCloseNavMenu}
+                                            sx={{ my: 2, color: "white", display: "block" }}
+                                        >
+                                            Enrollments
                                         </Button>
                                     </NavLink>
                                 </>

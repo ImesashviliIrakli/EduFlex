@@ -22,6 +22,8 @@ import CreateFaculty from "../pages/create-faculty/CreateFaculty";
 import EditFaculty from "../pages/edit-faculty/EditFaculty";
 // TeacherCourse Page
 import TeacherCourses from "../pages/teacher-Courses/TeacherCourses";
+// Enrollments Page 
+import Enrollments from "../pages/enrollments/Enrollments";
 
 const PrivateRoute = ({ element: Element, ...rest }) => {
     return sessionStorage.getItem("login") === "true" ? <Element {...rest} /> : <Navigate to="/auth" />;
@@ -46,6 +48,8 @@ export const router = createBrowserRouter(
                 <Route path="/edit-faculty/:id" element={<PrivateRoute element={EditFaculty} />} />
                 {/*Teacher Course Management*/}
                 <Route path="/teacher-courses" element={<PrivateRoute element={TeacherCourses} />} />
+                {/*Enrollments Management*/}
+                <Route path="/enrollments" element={<PrivateRoute element={Enrollments} />} />
 
                 <Route path="*" element={<NotFound />} />
             </Route>
