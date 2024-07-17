@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
+
+.login-container {
+    justify-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login {
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+    .login h2 {
+        margin-bottom: 20px;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .login .MuiTextField-root,
+    .login .MuiFormControl-root {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .login .MuiButton-root {
+        width: 100%;
+        padding: 10px;
+        background: #1976d2;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+
+        .login .MuiButton-root:hover {
+            background: #125a9e;
+        }
+
+    .login .MuiInputAdornment-root .MuiIconButton-root {
+        color: #1976d2;
+    }

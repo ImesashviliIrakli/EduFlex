@@ -52,7 +52,7 @@ builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowedOriginsPolicy", policy =>
 	{
-		policy.WithOrigins("http://localhost:3000", "http://localhost:3001")
+		policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002")
 			  .AllowAnyHeader()
 			  .AllowAnyMethod();
 	});
@@ -63,7 +63,7 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SuppressModelStateInvalidFilter = true;
+	options.SuppressModelStateInvalidFilter = true;
 });
 
 var app = builder.Build();
