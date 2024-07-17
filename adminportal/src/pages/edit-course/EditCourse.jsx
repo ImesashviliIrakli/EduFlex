@@ -39,19 +39,8 @@ function EditCourse() {
         handleSnackbarOpen,
     } = useAlertBarContext();
 
-    const { data: courseById } = useGet(["course", courseId], `/api/course/${courseId}`);
+    const { data: courseById } = useGet(["Course", courseId], `/api/course/${courseId}`);
     const { data: faculties } = useGet(["Faculties"], "/api/faculty/get");
-
-    useEffect(() => {
-        if (courseById?.result !== null) {
-            setTitle(courseById?.result.title);
-            setDescription(courseById?.result.description);
-            setPrice(courseById?.result.price);
-            setImageUrl(courseById?.result.imageUrl);
-            setFacultyId(courseById?.result.faculty.id);
-            setId(courseById?.result.id);
-        }
-    }, [courseById?.result]);
 
     const mutation = useMutation({
         mutationKey: ["Edit Course", courseId],
@@ -78,6 +67,17 @@ function EditCourse() {
             setSnackbarMessage("Course Update Failed!");
         },
     });
+
+    useEffect(() => {
+        if (courseById?.result !== null) {
+            setTitle(courseById?.result.title);
+            setDescription(courseById?.result.description);
+            setPrice(courseById?.result.price);
+            setImageUrl(courseById?.result.imageUrl);
+            setFacultyId(courseById?.result.faculty.id);
+            setId(courseById?.result.id);
+        }
+    }, [courseById?.result]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
