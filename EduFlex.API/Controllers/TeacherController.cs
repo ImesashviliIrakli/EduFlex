@@ -36,7 +36,15 @@ public class TeacherController : ControllerBase
 		return Ok(_response);
 	}
 
-	[HttpPost]
+    [HttpGet("GetByUserId")]
+    public async Task<IActionResult> GetByUserId()
+    {
+		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        _response.Result = await _service.GetByUserIdAsync(userId);
+        return Ok(_response);
+    }
+
+    [HttpPost]
 	public async Task<IActionResult> Post([FromBody] AddTeacherDto body)
 	{
 		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

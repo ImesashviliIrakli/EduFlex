@@ -71,6 +71,18 @@ public class StudentService : IStudentService
         return result;
     }
 
+    public async Task<StudentDto> GetByUserIdAsync(string userId)
+    {
+        var student = await _studentRepository.GetByUserIdAsync(userId);
+
+        if (student == null)
+            throw new NotFoundException($"Student profile with userId:{userId} not found");
+
+        var result = _mapper.Map<StudentDto>(student);
+
+        return result;
+    }
+
     public async Task<StudentDto> UpdateAsync(int id, UpdateStudentDto entity)
     {
         var checkUser = await _studentRepository.GetByIdAsync(filter: (u) => u.Id == id);

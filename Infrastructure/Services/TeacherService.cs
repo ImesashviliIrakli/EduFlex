@@ -70,6 +70,18 @@ public class TeacherService : ITeacherService
         return result;
     }
 
+    public async Task<TeacherDto> GetByUserIdAsync(string userId)
+    {
+        var teacher = await _teacherRepository.GetByUserIdAsync(userId);
+
+        if (teacher == null)
+            throw new NotFoundException($"Teacher profile with userId:{userId} not found");
+
+        var result = _mapper.Map<TeacherDto>(teacher);
+
+        return result;
+    }
+
     public async Task<TeacherDto> UpdateAsync(int id, UpdateTeacherDto entity)
     {
         var checkUser = await _teacherRepository.GetByIdAsync(filter: (u) => u.Id == id);
