@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Application.Models.Dtos.CourseDtos;
 
@@ -10,7 +11,7 @@ public class AddCourseDto
     public string Description { get; set; }
     [Required]
     public int Price { get; set; }
-    [Required]
+    [JsonIgnore]
     public string ImageUrl { get; set; }
     [Required]
     public int FacultyId { get; set; }
