@@ -1,6 +1,8 @@
 ﻿using Application.Exceptions;
+using Application.Interfaces.ImageService;
 using Application.Interfaces.Services;
 using Application.Models.Dtos.CourseDtos;
+using Domain;
 using EduFlex.API.Enums;
 using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +16,12 @@ namespace EduFlex.API.Controllers
 	public class CourseController : ControllerBase
 	{
 		private ICourseService _service;
+		private readonly ISaveImageService<Course> _imageService;
 		private ResponseModel _response;
-		public CourseController(ICourseService service)
+		public CourseController(ICourseService service, ISaveImageService<Course> imageService)
 		{
 			_service = service;
+			_imageService = imageService;
 			_response = new ResponseModel(Status.Success, "Success");
 		}
 
@@ -38,9 +42,13 @@ namespace EduFlex.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] AddCourseDto entity)
+		public async Task<IActionResult> Post([FromForm] AddCourseDto entity)
 		{
 			ModelStateValidator.ValidateModelState(ModelState);
+
+			string fileName = $"{entity.Title}_{Path.GetFileName(entity.File.FileName)}";
+
+            entity.ImageUrl = await _imageService.SaveImageAsync(entity.File, fileName);
 
             _response.Result = await _service.AddAsync(entity);
 			return Ok(_response);
