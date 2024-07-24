@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Interfaces.FileService;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Models.Dtos.CourseDtos;
 using AutoMapper;
@@ -7,75 +8,96 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services
 {
-	public class CourseService : ICourseService
-	{
-		private readonly ICourseRepository _courseRepository;
-		private readonly IMapper _mapper;
-		private readonly ILogger<CourseService> _logger;
+    public class CourseService : ICourseService
+    {
+        private readonly ICourseRepository _courseRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<CourseService> _logger;
+        private readonly IFileService<Course> _imageService;
 
-		public CourseService(ICourseRepository courseRepository, IMapper mapper, ILogger<CourseService> logger)
-		{
-			_courseRepository = courseRepository;
-			_mapper = mapper;
-			_logger = logger;
-		}
+        public CourseService(
+            ICourseRepository courseRepository,
+            IMapper mapper,
+            ILogger<CourseService> logger,
+            IFileService<Course> imageService
+            )
+        {
+            _courseRepository = courseRepository;
+            _mapper = mapper;
+            _imageService = imageService;
+            _logger = logger;
+        }
 
-		public async Task<CourseDto> AddAsync(AddCourseDto entity)
-		{
-			var course = _mapper.Map<Course>(entity);
+        public async Task<CourseDto> AddAsync(AddCourseDto entity)
+        {
+            string fileName = $"{entity.Title}_{Path.GetFileName(entity.File.FileName)}";
 
-			var add = await _courseRepository.AddAsync(course);
+            entity.ImageUrl = await _imageService.SaveFileAsync(entity.File, fileName);
 
-			_logger.LogInformation($"Course was added: {add.Id}");
+            var course = _mapper.Map<Course>(entity);
 
-			var result = _mapper.Map<CourseDto>(add);
+            var add = await _courseRepository.AddAsync(course);
 
-			return result;
-		}
+            _logger.LogInformation($"Course was added: {add.Id}");
 
-		public async Task<bool> DeleteAsync(int id)
-		{
-			var delete = await _courseRepository.DeleteAsync(id);
+            var result = _mapper.Map<CourseDto>(add);
 
-			if (delete)
-			{
-				_logger.LogInformation($"Course was deleted: {id}");
-			}
-			else
-			{
-				_logger.LogError($"Course wasn't deleted: {id}");
-			}
+            return result;
+        }
 
-			return delete;
-		}
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id);
 
-		public async Task<IEnumerable<CourseDto>> GetAllAsync()
-		{
-			var courses = await _courseRepository.GetAllAsync(includeProperties: "Faculty");
-			var result = _mapper.Map<IEnumerable<CourseDto>>(courses);
+            var delete = await _courseRepository.DeleteAsync(id);
 
-			return result;
-		}
+            await _imageService.DeleteFileAsync(course.ImageUrl);
 
-		public async Task<CourseDto> GetByIdAsync(int id)
-		{
-			var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id, includeProperties: "Faculty");
-			var result = _mapper.Map<CourseDto>(course);
+            if (delete)
+            {
+                _logger.LogInformation($"Course was deleted: {id}");
+            }
+            else
+            {
+                _logger.LogError($"Course wasn't deleted: {id}");
+            }
 
-			return result;
-		}
+            return delete;
+        }
 
-		public async Task<CourseDto> UpdateAsync(int id, UpdateCourseDto entity)
-		{
-			var course = _mapper.Map<Course>(entity);
+        public async Task<IEnumerable<CourseDto>> GetAllAsync()
+        {
+            var courses = await _courseRepository.GetAllAsync(includeProperties: "Faculty");
+            var result = _mapper.Map<IEnumerable<CourseDto>>(courses);
 
-			var update = await _courseRepository.UpdateAsync(id, course);
+            return result;
+        }
 
-			_logger.LogInformation($"Course was updated: {id}");
+        public async Task<CourseDto> GetByIdAsync(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id, includeProperties: "Faculty");
+            var result = _mapper.Map<CourseDto>(course);
 
-			var result = _mapper.Map<CourseDto>(update);
+            return result;
+        }
 
-			return result;
-		}
-	}
+        public async Task<CourseDto> UpdateAsync(int id, UpdateCourseDto entity)
+        {
+            var course = _mapper.Map<Course>(entity);
+
+            if (entity.File != null)
+            {
+                string fileName = $"{entity.Title}_{Path.GetFileName(entity.File.FileName)}";
+                course.ImageUrl = await _imageService.UpdateFileAsync(entity.File, fileName, entity.ImageUrl);
+            }
+
+            var update = await _courseRepository.UpdateAsync(id, course);
+
+            _logger.LogInformation($"Course was updated: {id}");
+
+            var result = _mapper.Map<CourseDto>(update);
+
+            return result;
+        }
+    }
 }

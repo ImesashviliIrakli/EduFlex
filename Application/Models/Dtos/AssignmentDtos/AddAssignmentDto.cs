@@ -1,17 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-namespace Domain;
+namespace Application.Models.Dtos.AssignmentDtos;
 
-public class Assignment
+public class AddAssignmentDto
 {
-    [Key]
-    public int Id { get; set; }
     [Required]
     public int TeacherCourseId { get; set; }
     [Required]
     public required string Title { get; set; }
     [Required]
     public required string Description { get; set; }
+    public IFormFile File { get; set; }
+    [JsonIgnore]
     public required string FileUrl { get; set; }
     [Required]
     public int MaxGrade { get; set; }

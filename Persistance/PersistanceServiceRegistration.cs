@@ -28,7 +28,8 @@ public static class PersistanceServiceRegistration
 		services.AddScoped<IStudentRepository, StudentRepository>();
 		services.AddScoped<ITeacherCourseRepository, TeacherCourseRepository>();
 		services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+        services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 
-		return services;
+        return services;
 	}
 }

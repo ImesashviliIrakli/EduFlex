@@ -1,4 +1,5 @@
 ﻿using Application.Models.Dtos;
+using Application.Models.Dtos.AssignmentDtos;
 using Application.Models.Dtos.CourseDtos;
 using Application.Models.Dtos.EnrollmentDtos;
 using Application.Models.Dtos.FacultyDtos;
@@ -41,5 +42,10 @@ public class MappingProfiles : Profile
         CreateMap<Enrollment, EnrollmentDto>().ReverseMap();
         CreateMap<AddEnrollmentDto, Enrollment>();
         CreateMap<UpdateEnrollmentDto, Enrollment>();
+
+        // Assignment Map
+        CreateMap<Assignment, AssignmentDto>().ReverseMap();
+        CreateMap<AddAssignmentDto, Assignment>();
+        CreateMap<UpdateAssignmentDto, Assignment>();
     }
 }
