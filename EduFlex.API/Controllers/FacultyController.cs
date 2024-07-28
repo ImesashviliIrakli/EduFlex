@@ -1,66 +1,66 @@
 ﻿using Application.Interfaces.Services;
 using Application.Models.Dtos.FacultyDtos;
-using EduFlex.API.Enums;
 using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EduFlex.API.Controllers
+namespace EduFlex.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize(Roles = "Admin")]
+public class FacultyController : BaseController
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	[Authorize(Roles = "Admin")]
-	public class FacultyController : ControllerBase
-	{
-		private IFacultyService _service;
-		private ResponseModel _response;
-		public FacultyController(IFacultyService service)
-		{
-			_service = service;
-			_response = new ResponseModel(Status.Success, "Success");
-		}
+    #region Injection
+    private IFacultyService _service;
+    public FacultyController(IFacultyService service)
+    {
+        _service = service;
+    }
+    #endregion
 
-		[HttpGet("Get")]
-		[AllowAnonymous]
-		public async Task<IActionResult> Get()
-		{
-			_response.Result = await _service.GetAllAsync();
-			return Ok(_response);
-		}
+    #region Read
+    [HttpGet("Get")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Get()
+    {
+        var data = await _service.GetAllAsync();
+        return CreateResponse(data);
+    }
 
-		[HttpGet("{id:int}")]
-		[AllowAnonymous]
-		public async Task<IActionResult> Get(int id)
-		{
-			_response.Result = await _service.GetByIdAsync(id);
-			return Ok(_response);
-		}
+    [HttpGet("{id:int}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Get(int id)
+    {
+        var data = await _service.GetByIdAsync(id);
+        return CreateResponse(data);
+    }
+    #endregion
 
-		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] AddFacultyDto entity)
-		{
-			ModelStateValidator.ValidateModelState(ModelState);
+    #region Write
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] AddFacultyDto addFacultyDto)
+    {
+        ModelStateValidator.ValidateModelState(ModelState);
 
-			_response.Result = await _service.AddAsync(entity);
-			return Ok(_response);
-		}
+        await _service.AddAsync(addFacultyDto);
+        return CreateResponse();
+    }
 
-		[HttpDelete("{id:int}")]
-		public async Task<IActionResult> Delete(int id)
-		{
-			_response.Result = await _service.DeleteAsync(id);
-			return Ok(_response);
-		}
+    [HttpPut]
+    public async Task<IActionResult> Put([FromBody] UpdateFacultyDto updateFacultyDto)
+    {
+        ModelStateValidator.ValidateModelState(ModelState);
 
-		[HttpPut]
-		public async Task<IActionResult> Put(int id, [FromBody] UpdateFacultyDto entity)
-		{
-			entity.Id = id;
+        await _service.UpdateAsync(updateFacultyDto);
+        return CreateResponse();
+    }
 
-            ModelStateValidator.ValidateModelState(ModelState);
-
-            _response.Result = await _service.UpdateAsync(id, entity);
-			return Ok(_response);
-		}
-	}
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _service.DeleteAsync(id);
+        return CreateResponse();
+    }
+    #endregion
 }

@@ -10,6 +10,7 @@ namespace Infrastructure.Services;
 
 public class TeacherCourseService : ITeacherCourseService
 {
+    #region Injection
     private readonly ITeacherCourseRepository _teacherCourseRepository;
     private readonly ITeacherRepository _teacherRepository;
     private readonly IMapper _mapper;
@@ -26,37 +27,9 @@ public class TeacherCourseService : ITeacherCourseService
         _logger = logger;
         _teacherRepository = teacherRepository;
     }
+    #endregion
 
-    public async Task<TeacherCourseDto> AddAsync(AddTeacherCourseDto entity)
-    {
-        var teacher = await ValidateTeacherAsync(entity.UserId, entity.TeacherId);
-
-        var teacherCourse = _mapper.Map<TeacherCourse>(entity);
-        var addedCourse = await _teacherCourseRepository.AddAsync(teacherCourse);
-
-        _logger.LogInformation($"Course added to teacher: {teacher.Id}, Course: {addedCourse.Id}");
-
-        return _mapper.Map<TeacherCourseDto>(addedCourse);
-    }
-
-    public async Task<bool> DeleteAsync(int id, string userId)
-    {
-        var teacher = await ValidateTeacherAsync(userId, null);
-        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(filter: (u) => u.Id == id);
-
-        if (teacherCourse == null || teacherCourse.TeacherId != teacher.Id)
-            throw new BadRequestException($"Course not found or does not belong to the specified teacher.");
-
-        var deleted = await _teacherCourseRepository.DeleteAsync(id);
-
-        if (deleted)
-            _logger.LogInformation($"Course deleted: {id}");
-        else
-            _logger.LogError($"Course deletion failed: {id}");
-
-        return deleted;
-    }
-
+    #region Read
     public async Task<IEnumerable<TeacherCourseDto>> GetAllAsync()
     {
         var teacherCourses = await _teacherCourseRepository.GetAllAsync("Teacher,Course,Course.Faculty");
@@ -65,22 +38,51 @@ public class TeacherCourseService : ITeacherCourseService
 
     public async Task<TeacherCourseDto> GetByIdAsync(int id)
     {
-        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(filter: (u) => u.Id == id);
+        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(tc => tc.Id == id);
         if (teacherCourse == null)
-            throw new NotFoundException($"Course with ID {id} not found.");
+            throw new NotFoundException($"TeacherCourse with ID {id} not found.");
 
         return _mapper.Map<TeacherCourseDto>(teacherCourse);
     }
+    #endregion
 
+    #region Write
+    public async Task AddAsync(AddTeacherCourseDto addTeacherCourseDto)
+    {
+        var teacher = await ValidateTeacherAsync(addTeacherCourseDto.UserId, addTeacherCourseDto.TeacherId);
+
+        var teacherCourse = _mapper.Map<TeacherCourse>(addTeacherCourseDto);
+        await _teacherCourseRepository.AddAsync(teacherCourse);
+
+        _logger.LogInformation("Course added to teacher with ID {TeacherId}", addTeacherCourseDto.TeacherId);
+    }
+
+    public async Task DeleteAsync(int id, string userId)
+    {
+        var teacher = await ValidateTeacherAsync(userId, null);
+        var teacherCourse = await _teacherCourseRepository.GetByIdAsync(tc => tc.Id == id);
+
+        if (teacherCourse == null || teacherCourse.TeacherId != teacher.Id)
+            throw new BadRequestException("Course not found or does not belong to the specified teacher.");
+
+        await _teacherCourseRepository.DeleteAsync(teacherCourse);
+
+        _logger.LogInformation("Course with ID {CourseId} deleted for teacher with ID {TeacherId}", id, teacher.Id);
+    }
+    #endregion
+
+    #region Other
     private async Task<Teacher> ValidateTeacherAsync(string userId, int? teacherId)
     {
         var teacher = await _teacherRepository.GetByUserIdAsync(userId);
+
         if (teacher == null)
             throw new BadRequestException("Teacher profile could not be found.");
 
         if (teacherId.HasValue && teacher.Id != teacherId.Value)
-            throw new BadRequestException("You can't perform this action for a different teacher.");
+            throw new BadRequestException("You cannot perform this action for a different teacher.");
 
         return teacher;
     }
+    #endregion
 }

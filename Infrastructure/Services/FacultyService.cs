@@ -8,80 +8,78 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services
 {
-	public class FacultyService : IFacultyService
-	{
-		private readonly IFacultyRepository _facultyRepository;
-		private readonly IMapper _mapper;
-		private readonly ILogger<FacultyService> _logger;
+    public class FacultyService : IFacultyService
+    {
+        #region Injection
+        private readonly IFacultyRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<FacultyService> _logger;
 
-		public FacultyService(IFacultyRepository facultyRepository, IMapper mapper, ILogger<FacultyService> logger)
-		{
-			_facultyRepository = facultyRepository;
-			_mapper = mapper;
-			_logger = logger;
-		}
+        public FacultyService(
+            IFacultyRepository facultyRepository,
+            IMapper mapper,
+            ILogger<FacultyService> logger
+            )
+        {
+            _repository = facultyRepository;
+            _mapper = mapper;
+            _logger = logger;
+        }
+        #endregion
 
-		public async Task<FacultyDto> AddAsync(AddFacultyDto entity)
-		{
-			var faculty = _mapper.Map<Faculty>(entity);
+        #region Read
+        public async Task<IEnumerable<FacultyDto>> GetAllAsync()
+        {
+            var faculties = await _repository.GetAllAsync();
+            var result = _mapper.Map<IEnumerable<FacultyDto>>(faculties);
 
-			var add = await _facultyRepository.AddAsync(faculty);
+            return result;
+        }
 
-			_logger.LogInformation($"Faculty was added: {add.Id}");
+        public async Task<FacultyDto> GetByIdAsync(int id)
+        {
+            var faculty = await _repository.GetByIdAsync(filter: (u) => u.Id == id);
+            var result = _mapper.Map<FacultyDto>(faculty);
 
-			var result = _mapper.Map<FacultyDto>(add);
+            return result;
+        }
+        #endregion
 
-			return result;
-		}
+        #region Write
+        public async Task AddAsync(AddFacultyDto addFacultyDto)
+        {
+            var faculty = _mapper.Map<Faculty>(addFacultyDto);
 
-		public async Task<bool> DeleteAsync(int id)
-		{
-			var delete = await _facultyRepository.DeleteAsync(id);
+            await _repository.AddAsync(faculty);
 
-			if (delete)
-			{
-				_logger.LogInformation($"Faculty was deleted: {id}");
-			}
-			else
-			{
-				_logger.LogError($"Faculty wasn't deleted: {id}");
-			}
+            _logger.LogInformation($"Faculty was added: {addFacultyDto.Name}");
+        }
 
-			return delete;
-		}
+        public async Task DeleteAsync(int id)
+        {
+            var faculty = await _repository.GetById(id);
 
-		public async Task<IEnumerable<FacultyDto>> GetAllAsync()
-		{
-			var faculties = await _facultyRepository.GetAllAsync();
-			var result = _mapper.Map<IEnumerable<FacultyDto>>(faculties);
+            if (faculty is null)
+                throw new NotFoundException($"Could not find faculty with Id:{id}");
 
-			return result;
-		}
+            await _repository.DeleteAsync(faculty);
 
-		public async Task<FacultyDto> GetByIdAsync(int id)
-		{
-			var faculty = await _facultyRepository.GetByIdAsync(filter: (u) => u.Id == id);
-			var result = _mapper.Map<FacultyDto>(faculty);
+            _logger.LogInformation($"Faculty was deleted: {id}");
+        }
 
-			return result;
-		}
+        public async Task UpdateAsync(UpdateFacultyDto updateFacultyDto)
+        {
+            var check = await _repository.GetById(updateFacultyDto.Id);
 
-		public async Task<FacultyDto> UpdateAsync(int id, UpdateFacultyDto entity)
-		{
-			var check =  await _facultyRepository.GetById(id);
+            if (check is null)
+                throw new NotFoundException($"Could not find faculty with id:{updateFacultyDto.Id}");
 
-			if (check == null)
-				throw new NotFoundException($"Could not find faculty with id:{id}");
+            var faculty = _mapper.Map<Faculty>(updateFacultyDto);
 
-			var faculty = _mapper.Map<Faculty>(entity);
+            await _repository.UpdateAsync(faculty);
 
-			var update = await _facultyRepository.UpdateAsync(id, faculty);
-
-			_logger.LogInformation($"Faculty was updated: {id}");
-
-			var result = _mapper.Map<FacultyDto>(update);
-
-			return result;
-		}
-	}
+            _logger.LogInformation($"Faculty was updated: {updateFacultyDto.Id}");
+        }
+        #endregion
+    }
 }

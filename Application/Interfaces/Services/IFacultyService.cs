@@ -6,8 +6,8 @@ namespace Application.Interfaces.Services
 	{
 		Task<IEnumerable<FacultyDto>> GetAllAsync();
 		Task<FacultyDto> GetByIdAsync(int id);
-		Task<FacultyDto> AddAsync(AddFacultyDto entity);
-		Task<bool> DeleteAsync(int id);
-		Task<FacultyDto> UpdateAsync(int id, UpdateFacultyDto entity);
+		Task AddAsync(AddFacultyDto addFacultyDto);
+		Task DeleteAsync(int id);
+		Task UpdateAsync(UpdateFacultyDto updateFacultyDto);
 	}
 }

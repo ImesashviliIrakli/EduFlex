@@ -1,7 +1,5 @@
 ﻿using Application.Interfaces.Services;
 using Application.Models.Auth;
-using EduFlex.API.Enums;
-using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,44 +7,48 @@ namespace EduFlex.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController : ControllerBase
+public class AuthController : BaseController
 {
-	private readonly IAuthService _authenticationService;
-	private ResponseModel _response;
-	public AuthController(IAuthService authenticationService)
-	{
-		_authenticationService = authenticationService;
-		_response = new ResponseModel(Status.Success, "Success");
-	}
+    #region Injection
+    private readonly IAuthService _authenticationService;
+    public AuthController(IAuthService authenticationService)
+    {
+        _authenticationService = authenticationService;
+    }
+    #endregion
 
-	[HttpPost("login")]
-	public async Task<IActionResult> Login(AuthRequest request)
-	{
-		_response.Result = await _authenticationService.Login(request);
-		return Ok(_response);
-	}
-
-	[HttpPost("addUserByAdmin")]
-	[Authorize(Roles = "Admin")]
-
-	public async Task<IActionResult> AddUserByAdmin(RegistrationRequest request)
-	{
-		_response.Result = await _authenticationService.Register(request);
-		return Ok(_response);
-	}
-
-	[HttpPost("register")]
-	public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
-	{
-		_response.Result = await _authenticationService.Register(request);
-		return Ok(_response);
-	}
-
-	[HttpGet("getusers/{roleName}")]
+    #region Read
+    [HttpGet("getusers/{roleName}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetUsers(string roleName)
-	{
-		_response.Result = await _authenticationService.GetUsers(roleName);
-		return Ok(_response);
-	}
+    {
+        var data = await _authenticationService.GetUsers(roleName);
+        return CreateResponse(data);
+    }
+    #endregion
+
+    #region Write
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(AuthRequest request)
+    {
+        var data = await _authenticationService.Login(request);
+        return CreateResponse(data);
+    }
+
+    [HttpPost("addUserByAdmin")]
+    [Authorize(Roles = "Admin")]
+
+    public async Task<IActionResult> AddUserByAdmin(RegistrationRequest request)
+    {
+        var data = await _authenticationService.Register(request);
+        return CreateResponse(data);
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegistrationRequest request)
+    {
+        var data = await _authenticationService.Register(request);
+        return CreateResponse(data);
+    }
+    #endregion
 }

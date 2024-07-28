@@ -10,94 +10,95 @@ namespace Infrastructure.Services;
 
 public class StudentService : IStudentService
 {
-    private readonly IStudentRepository _studentRepository;
+    #region Injection
+    private readonly IStudentRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger<StudentService> _logger;
 
-    public StudentService(IStudentRepository repository, IMapper mapper, ILogger<StudentService> logger)
+    public StudentService(
+        IStudentRepository repository,
+        IMapper mapper,
+        ILogger<StudentService> logger
+        )
     {
-        _studentRepository = repository;
+        _repository = repository;
         _mapper = mapper;
         _logger = logger;
     }
-    public async Task<StudentDto> AddAsync(AddStudentDto entity)
-    {
-        var checkUser = await _studentRepository.GetByUserIdAsync(entity.UserId);
+    #endregion
 
-        if (checkUser != null)
-            throw new BadRequestException($"Student profile already exists");
-
-        var Student = _mapper.Map<Student>(entity);
-
-        var add = await _studentRepository.AddAsync(Student);
-
-        _logger.LogInformation($"Student was added: {add.Id}");
-
-        var result = _mapper.Map<StudentDto>(add);
-
-        return result;
-    }
-
-    public async Task<bool> DeleteAsync(int id, string userId)
-    {
-        var checkUser = await _studentRepository.GetByUserIdAsync(userId);
-
-        if (checkUser.Id != id)
-            throw new BadRequestException("You don't have permission to delete other Students profile");
-
-        var delete = await _studentRepository.DeleteAsync(id);
-
-        if (delete)
-            _logger.LogInformation($"Student was deleted: {id}");
-        else
-            _logger.LogError($"Student wasn't deleted: {id}");
-
-        return delete;
-    }
-
+    #region Read
     public async Task<IEnumerable<StudentDto>> GetAllAsync()
     {
-        var Students = await _studentRepository.GetAllAsync();
-        var result = _mapper.Map<IEnumerable<StudentDto>>(Students);
-
-        return result;
+        var students = await _repository.GetAllAsync();
+        return _mapper.Map<IEnumerable<StudentDto>>(students);
     }
 
     public async Task<StudentDto> GetByIdAsync(int id)
     {
-        var Student = await _studentRepository.GetByIdAsync(filter: (u) => u.Id == id);
-        var result = _mapper.Map<StudentDto>(Student);
+        var student = await _repository.GetByIdAsync(filter: (u) => u.Id == id);
+        if (student == null)
+            throw new NotFoundException($"Student with ID {id} not found.");
 
-        return result;
+        return _mapper.Map<StudentDto>(student);
     }
 
     public async Task<StudentDto> GetByUserIdAsync(string userId)
     {
-        var student = await _studentRepository.GetByUserIdAsync(userId);
+        var student = await _repository.GetByUserIdAsync(userId);
 
         if (student == null)
-            throw new NotFoundException($"Student profile with userId:{userId} not found");
+            throw new NotFoundException($"Student profile with userId {userId} not found.");
 
-        var result = _mapper.Map<StudentDto>(student);
-
-        return result;
+        return _mapper.Map<StudentDto>(student);
     }
+    #endregion
 
-    public async Task<StudentDto> UpdateAsync(int id, UpdateStudentDto entity)
+    #region Write
+    public async Task AddAsync(AddStudentDto addStudentDto)
     {
-        var checkUser = await _studentRepository.GetByIdAsync(filter: (u) => u.Id == id);
+        var existingStudent = await _repository.GetByUserIdAsync(addStudentDto.UserId);
 
-        if (checkUser.UserId != entity.UserId)
-            throw new BadRequestException("You don't have permission to update different profile");
+        if (existingStudent != null)
+            throw new BadRequestException("Student profile already exists.");
 
-        var Student = _mapper.Map<Student>(entity);
+        var student = _mapper.Map<Student>(addStudentDto);
 
-        var update = await _studentRepository.UpdateAsync(id, Student);
+        await _repository.AddAsync(student);
 
-        _logger.LogInformation($"Student was updated: {id}");
-
-        var result = _mapper.Map<StudentDto>(update);
-
-        return result;
+        _logger.LogInformation($"Student added: {addStudentDto.Email}");
     }
+
+    public async Task DeleteAsync(int id, string userId)
+    {
+        var student = await _repository.GetByUserIdAsync(userId);
+
+        if (student == null)
+            throw new NotFoundException("Couldn't find associated student profile for user.");
+
+        if (student.Id != id)
+            throw new BadRequestException("You don't have permission to perform this operation.");
+
+        await _repository.DeleteAsync(student);
+
+        _logger.LogInformation($"Student deleted: {id}");
+    }
+
+    public async Task UpdateAsync(UpdateStudentDto updateStudentDto)
+    {
+        var student = await _repository.GetByIdAsync(filter: (u) => u.Id == updateStudentDto.Id);
+
+        if (student == null)
+            throw new NotFoundException($"Student with ID {updateStudentDto.Id} not found.");
+
+        if (student.UserId != updateStudentDto.UserId)
+            throw new BadRequestException("You don't have permission to update this profile.");
+
+        _mapper.Map(updateStudentDto, student);
+
+        await _repository.UpdateAsync(student);
+
+        _logger.LogInformation($"Student updated: {updateStudentDto.Id}");
+    }
+    #endregion
 }

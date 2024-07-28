@@ -6,7 +6,7 @@ public interface ICourseService
 {
 	Task<IEnumerable<CourseDto>> GetAllAsync();
 	Task<CourseDto> GetByIdAsync(int id);
-	Task<CourseDto> AddAsync(AddCourseDto entity);
-	Task<bool> DeleteAsync(int id);
-	Task<CourseDto> UpdateAsync(int id, UpdateCourseDto entity);
+	Task AddAsync(AddCourseDto addCourseDto);
+	Task DeleteAsync(int id);
+	Task UpdateAsync(UpdateCourseDto updateCourseDto);
 }

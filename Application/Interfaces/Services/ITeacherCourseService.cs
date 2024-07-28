@@ -6,6 +6,6 @@ public interface ITeacherCourseService
 {
     Task<IEnumerable<TeacherCourseDto>> GetAllAsync();
     Task<TeacherCourseDto> GetByIdAsync(int id);
-    Task<TeacherCourseDto> AddAsync(AddTeacherCourseDto entity);
-    Task<bool> DeleteAsync(int id, string userId);
+    Task AddAsync(AddTeacherCourseDto addTeacherCourseDto);
+    Task DeleteAsync(int id, string userId);
 }

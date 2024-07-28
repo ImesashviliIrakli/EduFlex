@@ -1,80 +1,81 @@
 ﻿using Application.Interfaces.Services;
 using Application.Models.Dtos.StudentDtos;
-using EduFlex.API.Enums;
 using EduFlex.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace EduFlex.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [Authorize(Roles = "Student")]
-public class StudentController : ControllerBase
+public class StudentController : BaseController
 {
-	private readonly IStudentService _service;
-	private ResponseModel _response;
-	public StudentController(IStudentService service)
-	{
-		_service = service;
-		_response = new ResponseModel(Status.Success, "Success");
-	}
+    #region Injection
+    private readonly IStudentService _service;
+    public StudentController(IStudentService service)
+    {
+        _service = service;
+    }
+    #endregion
 
-	[HttpGet]
-	[Authorize(Roles = "Teacher,Admin")]
-	public async Task<IActionResult> Get()
-	{
-		_response.Result = await _service.GetAllAsync();
-		return Ok(_response);
-	}
+    #region Read
+    [HttpGet]
+    [Authorize(Roles = "Teacher,Admin")]
+    public async Task<IActionResult> Get()
+    {
+        var data = await _service.GetAllAsync();
+        return CreateResponse(data);
+    }
 
-	[HttpGet("{id:int}")]
-	[Authorize(Roles = "Student,Teacher,Admin")]
-	public async Task<IActionResult> Get(int id)
-	{
-		_response.Result = await _service.GetByIdAsync(id);
-		return Ok(_response);
-	}
+    [HttpGet("{id:int}")]
+    [Authorize(Roles = "Student,Teacher,Admin")]
+    public async Task<IActionResult> Get(int id)
+    {
+        var data = await _service.GetByIdAsync(id);
+        return CreateResponse(data);
+    }
 
     [HttpGet("GetByUserId")]
     public async Task<IActionResult> GetByUserId()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        _response.Result = await _service.GetByUserIdAsync(userId);
-        return Ok(_response);
+        var data = await _service.GetByUserIdAsync(GetCurrentUserId());
+        return CreateResponse(data);
+    }
+    #endregion
+
+    #region Write
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] AddStudentDto addStudentDto)
+    {
+        addStudentDto.UserId = GetCurrentUserId();
+        addStudentDto.Email = GetCurrentUserEmail();
+
+        ModelStateValidator.ValidateModelState(ModelState);
+
+        await _service.AddAsync(addStudentDto);
+        return CreateResponse();
     }
 
-    [HttpPost]
-	public async Task<IActionResult> Post([FromBody] AddStudentDto body)
-	{
-		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		body.Email = User.FindFirstValue(ClaimTypes.Email);
+    [HttpPut]
+    public async Task<IActionResult> Put([FromBody] UpdateStudentDto updateStudentDto)
+    {
+        updateStudentDto.UserId = GetCurrentUserId();
+        updateStudentDto.Email = GetCurrentUserEmail();
 
         ModelStateValidator.ValidateModelState(ModelState);
 
-        _response.Result = await _service.AddAsync(body);
-		return Ok(_response);
-	}
+        await _service.UpdateAsync(updateStudentDto);
+        return CreateResponse();
+    }
 
-	[HttpPut]
-	public async Task<IActionResult> Put([FromBody] UpdateStudentDto body)
-	{
-		body.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		body.Email = User.FindFirstValue(ClaimTypes.Email);
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var userId = GetCurrentUserId();
 
-        ModelStateValidator.ValidateModelState(ModelState);
-
-        _response.Result = await _service.UpdateAsync(body.Id, body);
-		return Ok(_response);
-	}
-
-	[HttpDelete("{id:int}")]
-	public async Task<IActionResult> Delete(int id)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-		_response.Result = await _service.DeleteAsync(id, userId);
-		return Ok(_response);
-	}
+        await _service.DeleteAsync(id, userId);
+        return CreateResponse();
+    }
+    #endregion
 }
