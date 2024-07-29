@@ -3,6 +3,7 @@ using Application.Models.Dtos.AssignmentDtos;
 using Application.Models.Dtos.CourseDtos;
 using Application.Models.Dtos.EnrollmentDtos;
 using Application.Models.Dtos.FacultyDtos;
+using Application.Models.Dtos.HomeworkDtos;
 using Application.Models.Dtos.StudentDtos;
 using Application.Models.Dtos.TeacherDtos;
 using AutoMapper;
@@ -47,5 +48,9 @@ public class MappingProfiles : Profile
         CreateMap<Assignment, AssignmentDto>().ReverseMap();
         CreateMap<AddAssignmentDto, Assignment>();
         CreateMap<UpdateAssignmentDto, Assignment>();
+
+        // Homework Map
+        CreateMap<Homework, HomeworkDto>().ReverseMap();
+        CreateMap<UploadHomeworkDto, Homework>();
     }
 }
