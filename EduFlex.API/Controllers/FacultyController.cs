@@ -20,7 +20,7 @@ public class FacultyController : BaseController
     #endregion
 
     #region Read
-    [HttpGet("Get")]
+    [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> Get()
     {
@@ -28,11 +28,11 @@ public class FacultyController : BaseController
         return CreateResponse(data);
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{facultyId:int}")]
     [AllowAnonymous]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(int facultyId)
     {
-        var data = await _service.GetByIdAsync(id);
+        var data = await _service.GetByIdAsync(facultyId);
         return CreateResponse(data);
     }
     #endregion
@@ -56,10 +56,10 @@ public class FacultyController : BaseController
         return CreateResponse();
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{facultyId:int}")]
+    public async Task<IActionResult> Delete(int facultyId)
     {
-        await _service.DeleteAsync(id);
+        await _service.DeleteAsync(facultyId);
         return CreateResponse();
     }
     #endregion

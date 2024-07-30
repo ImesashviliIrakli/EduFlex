@@ -23,14 +23,14 @@ public class EnrollmentController : BaseController
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var data = await _service.GetAllAsync();
+        var data = await _service.GetEnrollmentsAsync();
         return CreateResponse(data);
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id)
+    [HttpGet("{enrollmentId:int}")]
+    public async Task<IActionResult> Get(int enrollmentId)
     {
-        var data = await _service.GetByIdAsync(id);
+        var data = await _service.GetEnrollmentAsync(enrollmentId);
         return CreateResponse(data);
     }
     #endregion
@@ -43,25 +43,14 @@ public class EnrollmentController : BaseController
 
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.AddAsync(addEnrollmentDto);
+        await _service.EnrollAsync(addEnrollmentDto);
         return CreateResponse();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Put([FromBody] UpdateEnrollmentDto updateEnrollmentDto)
+    [HttpDelete("{enrollmentId:int}")]
+    public async Task<IActionResult> Delete(int enrollmentId)
     {
-        updateEnrollmentDto.StudentUserId = GetCurrentUserId();
-
-        ModelStateValidator.ValidateModelState(ModelState);
-
-        await _service.UpdateAsync(updateEnrollmentDto);
-        return CreateResponse();
-    }
-
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        await _service.DeleteAsync(id, GetCurrentUserId());
+        await _service.UnEnrollAsync(enrollmentId, GetCurrentUserId());
         return CreateResponse();
     }
     #endregion

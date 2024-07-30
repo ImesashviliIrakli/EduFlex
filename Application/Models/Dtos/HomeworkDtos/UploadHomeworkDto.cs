@@ -13,7 +13,7 @@ public class UploadHomeworkDto
     [Required]
     public int TeacherCourseId { get; set; }
     [JsonIgnore]
-    public int StudentUserId { get; set; }
+    public required string StudentUserId { get; set; }
     [Required]
     public required IFormFile File { get; set; }
     [JsonIgnore]

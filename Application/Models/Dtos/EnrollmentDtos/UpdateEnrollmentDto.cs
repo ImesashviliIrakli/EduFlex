@@ -8,9 +8,7 @@ public class UpdateEnrollmentDto
     [Required]
     public int Id { get; set; }
     [JsonIgnore]
-    public string StudentUserId { get; set; }
-    [JsonIgnore]
-    public int StudentId { get; set; }
+    public required string StudentUserId { get; set; }
     [Required]
     public int TeacherCourseMapId { get; set; }
     [Required]

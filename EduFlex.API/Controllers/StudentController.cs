@@ -28,11 +28,11 @@ public class StudentController : BaseController
         return CreateResponse(data);
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{studentId:int}")]
     [Authorize(Roles = "Student,Teacher,Admin")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(int studentId)
     {
-        var data = await _service.GetByIdAsync(id);
+        var data = await _service.GetByIdAsync(studentId);
         return CreateResponse(data);
     }
 
@@ -69,12 +69,12 @@ public class StudentController : BaseController
         return CreateResponse();
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{studentId:int}")]
+    public async Task<IActionResult> Delete(int studentId)
     {
         var userId = GetCurrentUserId();
 
-        await _service.DeleteAsync(id, userId);
+        await _service.DeleteAsync(studentId, userId);
         return CreateResponse();
     }
     #endregion

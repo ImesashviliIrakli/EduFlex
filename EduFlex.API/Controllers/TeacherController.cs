@@ -28,10 +28,10 @@ public class TeacherController : BaseController
         return CreateResponse(data);
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id)
+    [HttpGet("{teacherId:int}")]
+    public async Task<IActionResult> Get(int teacherId)
     {
-        var data = await _service.GetByIdAsync(id);
+        var data = await _service.GetByIdAsync(teacherId);
         return CreateResponse(data);
     }
 
@@ -68,10 +68,10 @@ public class TeacherController : BaseController
         return CreateResponse();
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{teacherId:int}")]
+    public async Task<IActionResult> Delete(int teacherId)
     {
-        await _service.DeleteAsync(id, GetCurrentUserId());
+        await _service.DeleteAsync(teacherId, GetCurrentUserId());
         return CreateResponse();
     }
     #endregion

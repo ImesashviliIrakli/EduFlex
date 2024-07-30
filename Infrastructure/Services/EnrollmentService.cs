@@ -30,15 +30,15 @@ public class EnrollmentService : IEnrollmentService
     #endregion
 
     #region Read
-    public async Task<IEnumerable<EnrollmentDto>> GetAllAsync()
+    public async Task<IEnumerable<EnrollmentDto>> GetEnrollmentsAsync()
     {
         var enrollments = await _enrollmentRepository.GetAllAsync();
         return _mapper.Map<IEnumerable<EnrollmentDto>>(enrollments);
     }
 
-    public async Task<EnrollmentDto> GetByIdAsync(int id)
+    public async Task<EnrollmentDto> GetEnrollmentAsync(int enrollmentId)
     {
-        var enrollment = await _enrollmentRepository.GetByIdAsync(filter: (u) => u.Id == id);
+        var enrollment = await _enrollmentRepository.GetByIdAsync(filter: (u) => u.Id == enrollmentId);
 
         if (enrollment == null)
             throw new NotFoundException("Enrollment not found");
@@ -48,57 +48,29 @@ public class EnrollmentService : IEnrollmentService
     #endregion
 
     #region Write
-    public async Task AddAsync(AddEnrollmentDto addEnrollmentDto)
+    public async Task EnrollAsync(AddEnrollmentDto addEnrollmentDto)
     {
-        var validateUser = await ValidateStudentByUserId(addEnrollmentDto.StudentUserId);
-
-        addEnrollmentDto.StudentId = validateUser.Id;
-
         var enrollment = _mapper.Map<Enrollment>(addEnrollmentDto);
+
         await _enrollmentRepository.AddAsync(enrollment);
 
-        _logger.LogInformation($"Enrollment was added: {addEnrollmentDto.StudentId}|{addEnrollmentDto.TeacherCourseMapId}");
+        _logger.LogInformation($"Enrollment was added to: {addEnrollmentDto.TeacherCourseMapId}");
     }
 
-    public async Task DeleteAsync(int id, string userId)
+    public async Task UnEnrollAsync(int enrollmentId, string studentUserId)
     {
-        var validateUser = await ValidateStudentByUserId(userId);
-
-        var enrollment = await GetAndValidateEnrollmentsAsync(id, validateUser.Id);
+        var enrollment = await GetAndValidateEnrollmentsAsync(enrollmentId, studentUserId);
 
         await _enrollmentRepository.DeleteAsync(enrollment);
 
-        _logger.LogInformation($"Enrollment was deleted: {id}");
-    }
-
-    public async Task UpdateAsync(UpdateEnrollmentDto updateEnrollmentDto)
-    {
-        var validateUser = await ValidateStudentByUserId(updateEnrollmentDto.StudentUserId);
-
-        await GetAndValidateEnrollmentsAsync(updateEnrollmentDto.Id, validateUser.Id);
-
-        var updatedEnrollment = _mapper.Map<Enrollment>(updateEnrollmentDto);
-
-        await _enrollmentRepository.UpdateAsync(updatedEnrollment);
-
-        _logger.LogInformation($"Enrollment was updated: {updateEnrollmentDto.Id}");
+        _logger.LogInformation($"Enrollment was deleted: {enrollmentId}");
     }
     #endregion
 
     #region Other
-    private async Task<Student> ValidateStudentByUserId(string userId)
+    private async Task<Enrollment> GetAndValidateEnrollmentsAsync(int enrollmentId, string studentUserId)
     {
-        var student = await _studentRepository.GetByUserIdAsync(userId);
-
-        if (student is null)
-            throw new BadRequestException("Student profile already exists");
-
-        return student;
-    }
-
-    private async Task<Enrollment> GetAndValidateEnrollmentsAsync(int enrollmentId, int studentId)
-    {
-        var enrollments = await _enrollmentRepository.GetByStudentId(studentId);
+        var enrollments = await _enrollmentRepository.GetByStudentUserIdAsync(studentUserId);
 
         var enrollment = enrollments.FirstOrDefault(x => x.Id == enrollmentId);
 

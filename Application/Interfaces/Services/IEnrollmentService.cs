@@ -4,9 +4,8 @@ namespace Application.Interfaces.Services;
 
 public interface IEnrollmentService
 {
-    Task<IEnumerable<EnrollmentDto>> GetAllAsync();
-    Task<EnrollmentDto> GetByIdAsync(int id);
-    Task AddAsync(AddEnrollmentDto addEnrollmentDto);
-    Task DeleteAsync(int id, string userId);
-    Task UpdateAsync(UpdateEnrollmentDto updateEnrollmentDto);
+    Task<IEnumerable<EnrollmentDto>> GetEnrollmentsAsync();
+    Task<EnrollmentDto> GetEnrollmentAsync(int enrollmentId);
+    Task EnrollAsync(AddEnrollmentDto addEnrollmentDto);
+    Task UnEnrollAsync(int id, string userId);
 }

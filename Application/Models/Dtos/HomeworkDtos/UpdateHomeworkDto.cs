@@ -9,7 +9,9 @@ public class UpdateHomeworkDto
     [Required]
     public int Id { get; set; }
     [JsonIgnore]
-    public int StudentUserId { get; set; }
+    public required string StudentUserId { get; set; }
+    [Required]
+    public int EnrollmentId { get; set; }
     [Required]
     public required IFormFile File { get; set; }
     [JsonIgnore]

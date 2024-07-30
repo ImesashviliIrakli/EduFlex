@@ -13,8 +13,18 @@ public class EnrollmentRepository : Repository<Enrollment>, IEnrollmentRepositor
         _context = context;
     }
 
-    public async Task<IEnumerable<Enrollment>> GetByStudentId(int studentId)
+    public async Task<IEnumerable<Enrollment>> GetByStudentUserIdAsync(string studentUserId)
     {
-        return await _context.Enrollments.Where(x => x.StudentId == studentId).ToListAsync();
+        return await _context.Enrollments.Where(x => x.StudentUserId.Equals(studentUserId)).ToListAsync();
+    }
+
+    public async Task<Enrollment> GetByStudentUserIdAndEnrollmentIdAsync(string studentUserId, int enrollmentId)
+    {
+        return await _context.Enrollments
+            .FirstOrDefaultAsync(
+            x => 
+            x.StudentUserId.Equals(studentUserId) &&
+            x.Id.Equals(enrollmentId)
+            );
     }
 }

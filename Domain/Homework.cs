@@ -13,7 +13,7 @@ public class Homework
     [Required]
     public int TeacherCourseId { get; set; }
     [Required]
-    public int StudentUserId { get; set; }
+    public required string StudentUserId { get; set; }
     [Required]
     public required string FileUrl { get; set; }
     public int Grade { get; set; }

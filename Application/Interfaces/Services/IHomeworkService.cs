@@ -8,5 +8,5 @@ public interface IHomeworkService
     Task UploadHomeworkAsync(UploadHomeworkDto uploadHomeworkDto);
     Task UpdateHomeworkAsync(UpdateHomeworkDto updateHomeworkDto);
     Task UpdateHomeworkGradeAsync(UpdateHomeworkGradeDto updateHomeworkGradeDto);
-    Task DeleteHomeworkGradeAsync(int homeworkId, string studentUserId);
+    Task DeleteHomeworkAsync(int homeworkId, string studentUserId);
 }

@@ -56,7 +56,7 @@ public class AssignmentController : BaseController
         return CreateResponse();
     }
 
-    [HttpDelete("DleteByAssignmentId/{assignmentId:int}")]
+    [HttpDelete("{assignmentId:int}")]
     public async Task<IActionResult> DleteByAssignmentId(int assignmentId)
     {
         ModelStateValidator.ValidateModelState(ModelState);
