@@ -6,7 +6,7 @@ public interface IAssignmentService
 {
     Task<List<AssignmentDto>> GetAssignmentsAsync(int teacherCourseId, bool isActive);
     Task<AssignmentDto> GetAssignmentByIdAsync(int assignmentId);
-    Task AddAsync(AddAssignmentDto addAssignmentDto);
-    Task UpdateAsync(UpdateAssignmentDto updateAssignmentDto);
-    Task DeleteAsync(int assignmentId);
+    Task CreateAssignmentAsync(AddAssignmentDto addAssignmentDto);
+    Task UpdateAssignmentAsync(UpdateAssignmentDto updateAssignmentDto);
+    Task DeleteAssignmentAsync(int assignmentId);
 }

@@ -4,10 +4,9 @@ namespace Application.Interfaces.Services;
 
 public interface ITeacherService
 {
-    Task<IEnumerable<TeacherDto>> GetAllAsync();
-    Task<TeacherDto> GetByIdAsync(int id);
-    Task<TeacherDto> GetByUserIdAsync(string userId);
-    Task AddAsync(AddTeacherDto addTeacherDto);
-    Task DeleteAsync(int id, string userId);
-    Task UpdateAsync(UpdateTeacherDto updateTeacherDto);
+    Task<IEnumerable<TeacherDto>> GetTeachersAsync();
+    Task<TeacherDto> GetTeacherByUserIdAsync(string teacherUserId);
+    Task CreateTeacherProfileAsync(AddTeacherDto addTeacherDto);
+    Task UpdateTeacherProfileAsync(UpdateTeacherDto updateTeacherDto);
+    Task DeleteTeacherProfileAsync(string teacherUserId);
 }

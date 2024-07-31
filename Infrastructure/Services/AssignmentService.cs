@@ -11,6 +11,7 @@ namespace Infrastructure.Services;
 
 public class AssignmentService : IAssignmentService
 {
+    #region Injection
     private readonly IAssignmentRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger<AssignmentService> _logger;
@@ -26,7 +27,33 @@ public class AssignmentService : IAssignmentService
         _logger = logger;
         _fileService = fileService;
     }
-    public async Task AddAsync(AddAssignmentDto addAssignmentDto)
+    #endregion
+
+    #region Read
+    public async Task<List<AssignmentDto>> GetAssignmentsAsync(int teacherCourseId, bool isActive)
+    {
+        var assignments = await _repository.GetAssignmentsAsync(teacherCourseId, isActive);
+
+        var assignmentDtos = _mapper.Map<List<AssignmentDto>>(assignments);
+
+        return assignmentDtos;
+    }
+
+    public async Task<AssignmentDto> GetAssignmentByIdAsync(int assignmentId)
+    {
+        var assignment = await _repository.GetAssignmentByIdAsync(assignmentId);
+
+        if (assignment == null)
+            throw new NotFoundException($"Could not find assignment with id: {assignmentId}");
+
+        var assignemtDto = _mapper.Map<AssignmentDto>(assignment);
+
+        return assignemtDto;
+    }
+    #endregion
+
+    #region Write
+    public async Task CreateAssignmentAsync(AddAssignmentDto addAssignmentDto)
     {
         if (addAssignmentDto.File != null)
         {
@@ -43,44 +70,7 @@ public class AssignmentService : IAssignmentService
         _logger.LogInformation($"Added new assignment");
     }
 
-    public async Task DeleteAsync(int assignmentId)
-    {
-        var assignment = await _repository.GetAssignmentByIdAsync(assignmentId);
-
-        if (assignment == null)
-            throw new NotFoundException($"Could not find assignment with id: {assignmentId}");
-
-        await _repository.DeleteAsync(assignment);
-
-        _logger.LogInformation($"Deleted assignment {assignmentId}");
-
-        await _fileService.DeleteFileAsync(assignment.FileUrl);
-
-        _logger.LogInformation("Deleted assignment file");
-    }
-
-    public async Task<AssignmentDto> GetAssignmentByIdAsync(int assignmentId)
-    {
-        var assignment = await _repository.GetAssignmentByIdAsync(assignmentId);
-
-        if (assignment == null)
-            throw new NotFoundException($"Could not find assignment with id: {assignmentId}");
-
-        var assignemtDto = _mapper.Map<AssignmentDto>(assignment);
-
-        return assignemtDto;
-    }
-
-    public async Task<List<AssignmentDto>> GetAssignmentsAsync(int teacherCourseId, bool isActive)
-    {
-        var assignments = await _repository.GetAssignmentsAsync(teacherCourseId, isActive);
-
-        var assignmentDtos = _mapper.Map<List<AssignmentDto>>(assignments);
-
-        return assignmentDtos;
-    }
-
-    public async Task UpdateAsync(UpdateAssignmentDto updateAssignmentDto)
+    public async Task UpdateAssignmentAsync(UpdateAssignmentDto updateAssignmentDto)
     {
         var assignment = _mapper.Map<Assignment>(updateAssignmentDto);
 
@@ -96,4 +86,21 @@ public class AssignmentService : IAssignmentService
 
         _logger.LogInformation($"Assignment was updated: {assignment.Id}");
     }
+
+    public async Task DeleteAssignmentAsync(int assignmentId)
+    {
+        var assignment = await _repository.GetAssignmentByIdAsync(assignmentId);
+
+        if (assignment == null)
+            throw new NotFoundException($"Could not find assignment with id: {assignmentId}");
+
+        await _repository.DeleteAsync(assignment);
+
+        _logger.LogInformation($"Deleted assignment {assignmentId}");
+
+        await _fileService.DeleteFileAsync(assignment.FileUrl);
+
+        _logger.LogInformation("Deleted assignment file");
+    }
+    #endregion
 }

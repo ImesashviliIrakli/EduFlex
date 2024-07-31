@@ -31,7 +31,7 @@ public class CourseService : ICourseService
     #endregion
 
     #region Read
-    public async Task<IEnumerable<CourseDto>> GetAllAsync()
+    public async Task<IEnumerable<CourseDto>> GetCoursesAsync()
     {
         var courses = await _courseRepository.GetAllAsync(includeProperties: "Faculty");
         var result = _mapper.Map<IEnumerable<CourseDto>>(courses);
@@ -39,7 +39,7 @@ public class CourseService : ICourseService
         return result;
     }
 
-    public async Task<CourseDto> GetByIdAsync(int id)
+    public async Task<CourseDto> GetCourseByIdAsync(int id)
     {
         var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id, includeProperties: "Faculty");
         var result = _mapper.Map<CourseDto>(course);
@@ -49,7 +49,7 @@ public class CourseService : ICourseService
     #endregion
 
     #region Write
-    public async Task AddAsync(AddCourseDto addCourseDto)
+    public async Task CreateCourseAsync(AddCourseDto addCourseDto)
     {
         string fileName = $"{addCourseDto.Title}_{Path.GetFileName(addCourseDto.File.FileName)}";
 
@@ -62,18 +62,7 @@ public class CourseService : ICourseService
         _logger.LogInformation($"Course was added: {addCourseDto.Title}");
     }
 
-    public async Task DeleteAsync(int id)
-    {
-        var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id);
-
-        await _courseRepository.DeleteAsync(course);
-
-        await _imageService.DeleteFileAsync(course.ImageUrl);
-
-        _logger.LogInformation($"Course was deleted: {id}");
-    }
-
-    public async Task UpdateAsync(UpdateCourseDto updateCourseDto)
+    public async Task UpdateCourseAsync(UpdateCourseDto updateCourseDto)
     {
         var course = _mapper.Map<Course>(updateCourseDto);
 
@@ -86,6 +75,17 @@ public class CourseService : ICourseService
         await _courseRepository.UpdateAsync(course);
 
         _logger.LogInformation($"Course was updated: {updateCourseDto.Id}");
+    }
+
+    public async Task DeleteCourseAsync(int id)
+    {
+        var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == id);
+
+        await _courseRepository.DeleteAsync(course);
+
+        await _imageService.DeleteFileAsync(course.ImageUrl);
+
+        _logger.LogInformation($"Course was deleted: {id}");
     }
     #endregion
 }

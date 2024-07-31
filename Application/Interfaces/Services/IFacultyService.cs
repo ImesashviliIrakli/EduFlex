@@ -4,10 +4,10 @@ namespace Application.Interfaces.Services
 {
 	public interface IFacultyService
 	{
-		Task<IEnumerable<FacultyDto>> GetAllAsync();
-		Task<FacultyDto> GetByIdAsync(int id);
-		Task AddAsync(AddFacultyDto addFacultyDto);
-		Task DeleteAsync(int id);
-		Task UpdateAsync(UpdateFacultyDto updateFacultyDto);
-	}
+		Task<IEnumerable<FacultyDto>> GetFacultiesAsync();
+		Task<FacultyDto> GetFacultyByIdAsync(int id);
+		Task CreateFacultyAsync(AddFacultyDto addFacultyDto);
+		Task UpdateFacultyAsync(UpdateFacultyDto updateFacultyDto);
+        Task DeleteFacultyAsync(int id);
+    }
 }

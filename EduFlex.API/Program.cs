@@ -3,13 +3,10 @@ using EduFlex.API.Middleware;
 using Identity;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Persistance;
 using Serilog;
-using Infrastructure;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,42 +21,42 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
-	x.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
-	{
-		Name = "Authorization",
-		Description = "Enter the bearer authorization string as following: `Bearer Generated JWT TOKEN`",
-		In = ParameterLocation.Header,
-		Type = SecuritySchemeType.ApiKey,
-		Scheme = "Bearer"
-	});
+    x.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the bearer authorization string as following: `Bearer Generated JWT TOKEN`",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
 
-	x.AddSecurityRequirement(new OpenApiSecurityRequirement
-	{
-		{
-			new OpenApiSecurityScheme
-			{
-				Reference = new OpenApiReference
-				{
-					Type = ReferenceType.SecurityScheme,
-					Id = JwtBearerDefaults.AuthenticationScheme
-				}
-			}, new string[]{ }
-		}
-	});
+    x.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
+                }
+            }, new string[]{ }
+        }
+    });
 });
 
 builder.Services.AddCors(options =>
 {
-	options.AddPolicy("AllowedOriginsPolicy", policy =>
-	{
-		policy.WithOrigins("http://localhost:3000", "http://localhost:3001")
-			  .AllowAnyHeader()
-			  .AllowAnyMethod();
-	});
+    options.AddPolicy("AllowedOriginsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "http://localhost:3001")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 builder.Host.UseSerilog((context, loggerConfig) =>
-	loggerConfig.ReadFrom.Configuration(context.Configuration));
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -74,8 +71,8 @@ app.UseMiddleware<RequestContextLoggingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseStaticFiles();

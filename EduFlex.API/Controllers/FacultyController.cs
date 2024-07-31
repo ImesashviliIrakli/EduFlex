@@ -24,7 +24,7 @@ public class FacultyController : BaseController
     [AllowAnonymous]
     public async Task<IActionResult> Get()
     {
-        var data = await _service.GetAllAsync();
+        var data = await _service.GetFacultiesAsync();
         return CreateResponse(data);
     }
 
@@ -32,7 +32,7 @@ public class FacultyController : BaseController
     [AllowAnonymous]
     public async Task<IActionResult> Get(int facultyId)
     {
-        var data = await _service.GetByIdAsync(facultyId);
+        var data = await _service.GetFacultyByIdAsync(facultyId);
         return CreateResponse(data);
     }
     #endregion
@@ -43,7 +43,7 @@ public class FacultyController : BaseController
     {
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.AddAsync(addFacultyDto);
+        await _service.CreateFacultyAsync(addFacultyDto);
         return CreateResponse();
     }
 
@@ -52,14 +52,14 @@ public class FacultyController : BaseController
     {
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.UpdateAsync(updateFacultyDto);
+        await _service.UpdateFacultyAsync(updateFacultyDto);
         return CreateResponse();
     }
 
     [HttpDelete("{facultyId:int}")]
     public async Task<IActionResult> Delete(int facultyId)
     {
-        await _service.DeleteAsync(facultyId);
+        await _service.DeleteFacultyAsync(facultyId);
         return CreateResponse();
     }
     #endregion

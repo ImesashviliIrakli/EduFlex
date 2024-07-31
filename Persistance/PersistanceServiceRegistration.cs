@@ -22,6 +22,7 @@ public static class PersistanceServiceRegistration
 			}
 		);
 
+		// Service Registration
 		services.AddScoped<ICourseRepository, CourseRepository>();
 		services.AddScoped<IFacultyRepository, FacultyRepository>();
 		services.AddScoped<ITeacherRepository, TeacherRepository>();

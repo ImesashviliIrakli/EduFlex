@@ -23,7 +23,7 @@ public class HomeworkController : BaseController
     public async Task<IActionResult> GetHomeworks(int teacherCourseId)
     {
         var data = await _service.GetHomeworksAsync(GetCurrentUserId(), teacherCourseId);
-        
+
         return CreateResponse(data);
     }
     #endregion

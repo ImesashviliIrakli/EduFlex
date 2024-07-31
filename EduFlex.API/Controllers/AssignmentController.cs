@@ -43,7 +43,7 @@ public class AssignmentController : BaseController
     {
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.AddAsync(addAssignmentDto);
+        await _service.CreateAssignmentAsync(addAssignmentDto);
         return CreateResponse();
     }
 
@@ -52,7 +52,7 @@ public class AssignmentController : BaseController
     {
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.UpdateAsync(updateAssignmentDto);
+        await _service.UpdateAssignmentAsync(updateAssignmentDto);
         return CreateResponse();
     }
 
@@ -61,7 +61,7 @@ public class AssignmentController : BaseController
     {
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.DeleteAsync(assignmentId);
+        await _service.DeleteAssignmentAsync(assignmentId);
         return CreateResponse();
     }
     #endregion

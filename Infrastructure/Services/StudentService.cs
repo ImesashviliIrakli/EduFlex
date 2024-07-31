@@ -28,22 +28,13 @@ public class StudentService : IStudentService
     #endregion
 
     #region Read
-    public async Task<IEnumerable<StudentDto>> GetAllAsync()
+    public async Task<IEnumerable<StudentDto>> GetStudentsAsync()
     {
         var students = await _repository.GetAllAsync();
         return _mapper.Map<IEnumerable<StudentDto>>(students);
     }
 
-    public async Task<StudentDto> GetByIdAsync(int id)
-    {
-        var student = await _repository.GetByIdAsync(filter: (u) => u.Id == id);
-        if (student == null)
-            throw new NotFoundException($"Student with ID {id} not found.");
-
-        return _mapper.Map<StudentDto>(student);
-    }
-
-    public async Task<StudentDto> GetByUserIdAsync(string userId)
+    public async Task<StudentDto> GetStudentByUserIdAsync(string userId)
     {
         var student = await _repository.GetByUserIdAsync(userId);
 
@@ -55,7 +46,7 @@ public class StudentService : IStudentService
     #endregion
 
     #region Write
-    public async Task AddAsync(AddStudentDto addStudentDto)
+    public async Task CreateStudentProfileAsync(AddStudentDto addStudentDto)
     {
         var existingStudent = await _repository.GetByUserIdAsync(addStudentDto.UserId);
 
@@ -69,22 +60,7 @@ public class StudentService : IStudentService
         _logger.LogInformation($"Student added: {addStudentDto.Email}");
     }
 
-    public async Task DeleteAsync(int id, string userId)
-    {
-        var student = await _repository.GetByUserIdAsync(userId);
-
-        if (student == null)
-            throw new NotFoundException("Couldn't find associated student profile for user.");
-
-        if (student.Id != id)
-            throw new BadRequestException("You don't have permission to perform this operation.");
-
-        await _repository.DeleteAsync(student);
-
-        _logger.LogInformation($"Student deleted: {id}");
-    }
-
-    public async Task UpdateAsync(UpdateStudentDto updateStudentDto)
+    public async Task UpdateStudentProfileAsync(UpdateStudentDto updateStudentDto)
     {
         var student = await _repository.GetByIdAsync(filter: (u) => u.Id == updateStudentDto.Id);
 
@@ -99,6 +75,19 @@ public class StudentService : IStudentService
         await _repository.UpdateAsync(student);
 
         _logger.LogInformation($"Student updated: {updateStudentDto.Id}");
+    }
+
+
+    public async Task DeleteStudentProfileAsync(string userId)
+    {
+        var student = await _repository.GetByUserIdAsync(userId);
+
+        if (student == null)
+            throw new NotFoundException("Couldn't find associated student profile for user.");
+
+        await _repository.DeleteAsync(student);
+
+        _logger.LogInformation($"Student deleted: {userId}");
     }
     #endregion
 }

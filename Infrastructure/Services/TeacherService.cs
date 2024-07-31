@@ -27,70 +27,62 @@ public class TeacherService : ITeacherService
     #endregion
 
     #region Read
-    public async Task<IEnumerable<TeacherDto>> GetAllAsync()
+    public async Task<IEnumerable<TeacherDto>> GetTeachersAsync()
     {
         var teachers = await _repository.GetAllAsync();
         return _mapper.Map<IEnumerable<TeacherDto>>(teachers);
     }
 
-    public async Task<TeacherDto> GetByIdAsync(int id)
+    public async Task<TeacherDto> GetTeacherByUserIdAsync(string teacherUserId)
     {
-        var teacher = await _repository.GetByIdAsync(t => t.Id == id);
-        if (teacher == null)
-            throw new NotFoundException($"Teacher with ID {id} not found.");
-
-        return _mapper.Map<TeacherDto>(teacher);
-    }
-
-    public async Task<TeacherDto> GetByUserIdAsync(string userId)
-    {
-        var teacher = await _repository.GetByUserIdAsync(userId);
-        if (teacher == null)
-            throw new NotFoundException($"Teacher profile with userId:{userId} not found");
+        var teacher = await GetAndValidateTeacherAsync(teacherUserId);
 
         return _mapper.Map<TeacherDto>(teacher);
     }
     #endregion
 
     #region Write
-    public async Task AddAsync(AddTeacherDto addTeacherDto)
+    public async Task CreateTeacherProfileAsync(AddTeacherDto addTeacherDto)
     {
-        var existingTeacher = await _repository.GetByUserIdAsync(addTeacherDto.UserId);
-        if (existingTeacher != null)
-            throw new BadRequestException("Teacher profile already exists");
+        var teacher = await _repository.GetByUserIdAsync(addTeacherDto.UserId);
 
-        var teacher = _mapper.Map<Teacher>(addTeacherDto);
+        _mapper.Map(addTeacherDto, teacher);
+
         await _repository.AddAsync(teacher);
 
         _logger.LogInformation($"Teacher was added: {addTeacherDto.Email}");
     }
 
-    public async Task DeleteAsync(int id, string userId)
+    public async Task UpdateTeacherProfileAsync(UpdateTeacherDto updateTeacherDto)
     {
-        var teacher = await _repository.GetByUserIdAsync(userId);
-        if (teacher == null)
-            throw new NotFoundException($"Teacher profile with userId:{userId} not found");
+        var teacher = await _repository.GetByUserIdAsync(updateTeacherDto.UserId);
 
-        if (teacher.Id != id)
-            throw new BadRequestException("You don't have permission to delete another teacher's profile");
+        _mapper.Map(updateTeacherDto, teacher);
 
-        await _repository.DeleteAsync(teacher);
-        _logger.LogInformation($"Teacher was deleted: {id}");
-    }
-
-    public async Task UpdateAsync(UpdateTeacherDto updateTeacherDto)
-    {
-        var existingTeacher = await _repository.GetByIdAsync(t => t.Id == updateTeacherDto.Id);
-        if (existingTeacher == null)
-            throw new NotFoundException($"Teacher with ID {updateTeacherDto.Id} not found.");
-
-        if (existingTeacher.UserId != updateTeacherDto.UserId)
-            throw new BadRequestException("You don't have permission to update another teacher's profile");
-
-        var teacher = _mapper.Map<Teacher>(updateTeacherDto);
         await _repository.UpdateAsync(teacher);
 
         _logger.LogInformation($"Teacher was updated: {updateTeacherDto.Id}");
+    }
+
+    public async Task DeleteTeacherProfileAsync(string teacherUserId)
+    {
+        var teacher = await GetAndValidateTeacherAsync(teacherUserId);
+
+        await _repository.DeleteAsync(teacher);
+
+        _logger.LogInformation($"Teacher was deleted: {teacherUserId}");
+    }
+    #endregion
+
+    #region Other
+    private async Task<Teacher> GetAndValidateTeacherAsync(string teacherUserId)
+    {
+        var teacher = await _repository.GetByUserIdAsync(teacherUserId);
+
+        if (teacher == null)
+            throw new NotFoundException($"Teacher profile with userId:{teacherUserId} not found");
+
+        return teacher;
     }
     #endregion
 }

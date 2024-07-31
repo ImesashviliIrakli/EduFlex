@@ -24,22 +24,14 @@ public class StudentController : BaseController
     [Authorize(Roles = "Teacher,Admin")]
     public async Task<IActionResult> Get()
     {
-        var data = await _service.GetAllAsync();
+        var data = await _service.GetStudentsAsync();
         return CreateResponse(data);
     }
 
-    [HttpGet("{studentId:int}")]
-    [Authorize(Roles = "Student,Teacher,Admin")]
-    public async Task<IActionResult> Get(int studentId)
+    [HttpGet("GetStudent")]
+    public async Task<IActionResult> GetStudent()
     {
-        var data = await _service.GetByIdAsync(studentId);
-        return CreateResponse(data);
-    }
-
-    [HttpGet("GetByUserId")]
-    public async Task<IActionResult> GetByUserId()
-    {
-        var data = await _service.GetByUserIdAsync(GetCurrentUserId());
+        var data = await _service.GetStudentByUserIdAsync(GetCurrentUserId());
         return CreateResponse(data);
     }
     #endregion
@@ -53,7 +45,7 @@ public class StudentController : BaseController
 
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.AddAsync(addStudentDto);
+        await _service.CreateStudentProfileAsync(addStudentDto);
         return CreateResponse();
     }
 
@@ -65,16 +57,14 @@ public class StudentController : BaseController
 
         ModelStateValidator.ValidateModelState(ModelState);
 
-        await _service.UpdateAsync(updateStudentDto);
+        await _service.UpdateStudentProfileAsync(updateStudentDto);
         return CreateResponse();
     }
 
-    [HttpDelete("{studentId:int}")]
-    public async Task<IActionResult> Delete(int studentId)
+    [HttpDelete]
+    public async Task<IActionResult> Delete()
     {
-        var userId = GetCurrentUserId();
-
-        await _service.DeleteAsync(studentId, userId);
+        await _service.DeleteStudentProfileAsync(GetCurrentUserId());
         return CreateResponse();
     }
     #endregion
