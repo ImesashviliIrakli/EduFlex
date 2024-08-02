@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain;
 
@@ -19,4 +20,7 @@ public class Assignment
     public int MinGrade { get; set; }
     [Required]
     public bool IsActive { get; set; }
+
+    [ForeignKey("TeacherCourseId")]
+    public TeacherCourse? TeacherCourse { get; set; }
 }

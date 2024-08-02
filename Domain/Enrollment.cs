@@ -6,14 +6,11 @@ public class Enrollment
 {
     public int Id { get; set; }
     public int StudentUserId { get; set; }
-    public int TeacherCourseMapId { get; set; }
+    public int TeacherCourseId { get; set; }
     public DateTime Date { get; set; }
     public int Status { get; set; }
-    // Navigation properties
-    [ForeignKey("StudentUserId")]
-    public required Student Student { get; set; }
 
-    [ForeignKey("TeacherCourseMapId")]
+    [ForeignKey("TeacherCourseId")]
     public required TeacherCourse TeacherCourseMap { get; set; }
 }
 

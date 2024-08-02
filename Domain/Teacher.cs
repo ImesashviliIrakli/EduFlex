@@ -13,5 +13,4 @@ public class Teacher
 	public required string PrivateNumber { get; set; }
 	public DateTime DateOfBirth { get; set; }
 	public int YearsOfExperience { get; set; }
-    public ICollection<TeacherCourse> TeacherCourseMaps { get; set; }
 }

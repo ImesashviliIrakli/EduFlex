@@ -6,17 +6,17 @@ public class Course
 {
     [Key]
     public int Id { get; set; }
-    public string Title { get; set; }
+    [Required]
+    public required string Title { get; set; }
+    [Required]
     public string Description { get; set; }
-    public int Price { get; set; }	
+    public int Price { get; set; }
+    [Required]
     public string ImageUrl { get; set; }
     public int FacultyId { get; set; }
 
     // Navigation property for related faculty
     [ForeignKey("FacultyId")]
-    public Faculty Faculty { get; set; }
-
-    // Navigation property for TeacherCourseMap
-    public ICollection<TeacherCourse> TeacherCourseMaps { get; set; }
+    public Faculty? Faculty { get; set; }
 }
 
