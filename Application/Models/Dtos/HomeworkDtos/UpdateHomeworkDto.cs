@@ -14,6 +14,6 @@ public class UpdateHomeworkDto
     public int EnrollmentId { get; set; }
     [Required]
     public required IFormFile File { get; set; }
-    [JsonIgnore]
-    public required string FileUrl { get; set; }
+    [JsonIgnore] 
+    public string? FileUrl { get; set; } = string.Empty;
 }

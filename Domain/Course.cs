@@ -9,14 +9,12 @@ public class Course
     [Required]
     public required string Title { get; set; }
     [Required]
-    public string Description { get; set; }
+    public required string Description { get; set; }
     public int Price { get; set; }
-    [Required]
-    public string ImageUrl { get; set; }
+    public required string ImageUrl { get; set; }
     public int FacultyId { get; set; }
 
     // Navigation property for related faculty
     [ForeignKey("FacultyId")]
     public Faculty? Faculty { get; set; }
 }
-

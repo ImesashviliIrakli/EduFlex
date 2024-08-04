@@ -14,10 +14,9 @@ public class UpdateCourseDto
     public string Description { get; set; }
     [Required]
     public int Price { get; set; }
-    [Required]
-    public IFormFile File { get; set; }
+    public IFormFile? File { get; set; }
     [JsonIgnore]
-    public string ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
     [Required]
     public int FacultyId { get; set; }
 }

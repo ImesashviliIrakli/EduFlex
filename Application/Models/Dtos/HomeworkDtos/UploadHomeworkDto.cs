@@ -16,6 +16,6 @@ public class UploadHomeworkDto
     public required string StudentUserId { get; set; }
     [Required]
     public required IFormFile File { get; set; }
-    [JsonIgnore]
-    public required string FileUrl { get; set; }
+    [JsonIgnore] 
+    public string? FileUrl { get; set; } = string.Empty;
 }

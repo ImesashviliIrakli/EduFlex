@@ -72,15 +72,21 @@ public class AssignmentService : IAssignmentService
 
     public async Task UpdateAssignmentAsync(UpdateAssignmentDto updateAssignmentDto)
     {
-        var assignment = _mapper.Map<Assignment>(updateAssignmentDto);
+        var assignment = await _repository.GetAssignmentByIdAsync(updateAssignmentDto.Id);
 
         if (updateAssignmentDto.File != null)
         {
             string fileName = $"{updateAssignmentDto.Title}_{Path.GetFileName(updateAssignmentDto.File.FileName)}";
-            assignment.FileUrl = await _fileService.UpdateFileAsync(updateAssignmentDto.File, fileName, updateAssignmentDto.FileUrl);
+            assignment.FileUrl = await _fileService.UpdateFileAsync(updateAssignmentDto.File, fileName, assignment.FileUrl);
 
             _logger.LogInformation($"Added new assignment file: {fileName}");
         }
+
+        assignment.Title = updateAssignmentDto.Title;
+        assignment.Description = updateAssignmentDto.Description;
+        assignment.MaxGrade = updateAssignmentDto.MaxGrade;
+        assignment.MinGrade = updateAssignmentDto.MinGrade;
+        assignment.IsActive = updateAssignmentDto.IsActive;
 
         await _repository.UpdateAsync(assignment);
 

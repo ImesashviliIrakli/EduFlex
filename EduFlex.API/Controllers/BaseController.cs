@@ -6,7 +6,6 @@ using System.Security.Claims;
 
 namespace EduFlex.API.Controllers;
 
-[Authorize]
 public abstract class BaseController : ControllerBase
 {
     protected ResponseModel _response;

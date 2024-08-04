@@ -48,7 +48,7 @@ public class CourseController : BaseController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromBody] UpdateCourseDto updateCourseDto)
+    public async Task<IActionResult> Put([FromForm] UpdateCourseDto updateCourseDto)
     {
         ModelStateValidator.ValidateModelState(ModelState);
 

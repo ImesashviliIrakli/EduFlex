@@ -7,4 +7,6 @@ public class Faculty
 	public int Id { get; set; }
 	[Required]
 	public required string Name { get; set; }
+
+	public ICollection<Course> Courses { get; set; }
 }

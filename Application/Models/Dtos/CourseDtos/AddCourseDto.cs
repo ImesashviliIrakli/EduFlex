@@ -15,7 +15,7 @@ public class AddCourseDto
     [Required]
     public IFormFile File { get; set; }
     [JsonIgnore]
-    public string ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
     [Required]
     public int FacultyId { get; set; }
 }

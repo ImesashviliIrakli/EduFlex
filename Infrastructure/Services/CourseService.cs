@@ -64,13 +64,18 @@ public class CourseService : ICourseService
 
     public async Task UpdateCourseAsync(UpdateCourseDto updateCourseDto)
     {
-        var course = _mapper.Map<Course>(updateCourseDto);
+        var course = await _courseRepository.GetByIdAsync(filter: (u) => u.Id == updateCourseDto.Id);
 
         if (updateCourseDto.File != null)
         {
             string fileName = $"{updateCourseDto.Title}_{Path.GetFileName(updateCourseDto.File.FileName)}";
-            course.ImageUrl = await _imageService.UpdateFileAsync(updateCourseDto.File, fileName, updateCourseDto.ImageUrl);
+            course.ImageUrl = await _imageService.UpdateFileAsync(updateCourseDto.File, fileName, course.ImageUrl);
         }
+
+        course.Title = updateCourseDto.Title;
+        course.Description = updateCourseDto.Description;
+        course.Price = updateCourseDto.Price;
+        course.FacultyId = updateCourseDto.FacultyId;
 
         await _courseRepository.UpdateAsync(course);
 

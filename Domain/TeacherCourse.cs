@@ -16,4 +16,7 @@ public class TeacherCourse
 
     [ForeignKey("TeacherId")]
     public Teacher? Teacher { get; set; }
+
+    public ICollection<Order>? Orders { get; set; }
+    public ICollection<Assignment>? Assignments { get; set; }
 }

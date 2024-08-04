@@ -28,6 +28,14 @@ public class TeacherCourseController : BaseController
         return CreateResponse(data);
     }
 
+    [HttpGet("GetByUserId")]
+    public async Task<IActionResult> GetByUserId()
+    {
+        var data = await _service.GetByUserIdAsync(GetCurrentUserId());
+        return CreateResponse(data);
+    }
+
+
     [HttpGet("{teacherCourseId:int}")]
     [AllowAnonymous]
     public async Task<IActionResult> Get(int teacherCourseId)

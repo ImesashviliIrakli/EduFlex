@@ -12,9 +12,9 @@ public class AddAssignmentDto
     public required string Title { get; set; }
     [Required]
     public required string Description { get; set; }
-    public IFormFile File { get; set; }
+    public IFormFile? File { get; set; }
     [JsonIgnore]
-    public required string FileUrl { get; set; }
+    public string? FileUrl { get; set; } = string.Empty;
     [Required]
     public int MaxGrade { get; set; }
     [Required]

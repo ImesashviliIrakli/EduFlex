@@ -9,7 +9,7 @@ namespace Infrastructure.fileService
         {
             if (string.IsNullOrWhiteSpace(fileUrl))
             {
-                throw new ArgumentException("Invalid file URL");
+                await Task.CompletedTask;
             }
 
             if (!fileUrl.StartsWith("/"))
@@ -18,7 +18,7 @@ namespace Infrastructure.fileService
             }
 
             string folderName = typeof(T).Name;
-            string filePath = Path.Combine(@"C:\files", folderName, fileUrl.TrimStart('/'));
+            string filePath = Path.Combine(@"C:\files", fileUrl.TrimStart('/'));
 
             if (File.Exists(filePath))
             {
@@ -44,7 +44,7 @@ namespace Infrastructure.fileService
                 await formFile.CopyToAsync(stream);
             }
 
-            return $"/{folderName}{fileName}";
+            return $"/{folderName}/{fileName}";
         }
 
         public async Task<string> UpdateFileAsync(IFormFile formFile, string fileName, string fileUrl)

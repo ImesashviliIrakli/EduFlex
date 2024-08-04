@@ -12,8 +12,8 @@ using Persistance.Data;
 namespace Persistance.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240802212935_DefaulPersistance")]
-    partial class DefaulPersistance
+    [Migration("20240804114546_DefaultPersistance")]
+    partial class DefaultPersistance
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,18 +108,18 @@ namespace Persistance.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<int>("StudentUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeacherCourseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherCourseId");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Enrollments");
                 });
@@ -171,7 +171,34 @@ namespace Persistance.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AssignmentId");
+
                     b.ToTable("Homeworks");
+                });
+
+            modelBuilder.Entity("Domain.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("StudentUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TeacherCourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherCourseId");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Domain.Student", b =>
@@ -295,7 +322,7 @@ namespace Persistance.Migrations
             modelBuilder.Entity("Domain.Assignment", b =>
                 {
                     b.HasOne("Domain.TeacherCourse", "TeacherCourse")
-                        .WithMany()
+                        .WithMany("Assignments")
                         .HasForeignKey("TeacherCourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -306,7 +333,7 @@ namespace Persistance.Migrations
             modelBuilder.Entity("Domain.Course", b =>
                 {
                     b.HasOne("Domain.Faculty", "Faculty")
-                        .WithMany()
+                        .WithMany("Courses")
                         .HasForeignKey("FacultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -316,13 +343,35 @@ namespace Persistance.Migrations
 
             modelBuilder.Entity("Domain.Enrollment", b =>
                 {
-                    b.HasOne("Domain.TeacherCourse", "TeacherCourseMap")
+                    b.HasOne("Domain.Order", "Order")
                         .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Domain.Homework", b =>
+                {
+                    b.HasOne("Domain.Assignment", "Assignment")
+                        .WithMany("Homeworks")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
+                });
+
+            modelBuilder.Entity("Domain.Order", b =>
+                {
+                    b.HasOne("Domain.TeacherCourse", "TeacherCourse")
+                        .WithMany("Orders")
                         .HasForeignKey("TeacherCourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TeacherCourseMap");
+                    b.Navigation("TeacherCourse");
                 });
 
             modelBuilder.Entity("Domain.TeacherCourse", b =>
@@ -342,6 +391,23 @@ namespace Persistance.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Domain.Assignment", b =>
+                {
+                    b.Navigation("Homeworks");
+                });
+
+            modelBuilder.Entity("Domain.Faculty", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("Domain.TeacherCourse", b =>
+                {
+                    b.Navigation("Assignments");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

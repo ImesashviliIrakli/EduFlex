@@ -36,6 +36,16 @@ public class TeacherCourseService : ITeacherCourseService
         return _mapper.Map<IEnumerable<TeacherCourseDto>>(teacherCourses);
     }
 
+    public async Task<IEnumerable<TeacherCourseDto>> GetByUserIdAsync(string teacherUserId)
+    {
+        var teacher = await _teacherRepository.GetByUserIdAsync(teacherUserId);
+
+        if (teacher == null)
+            throw new NotFoundException($"Teacher not found.");
+
+        var teacherCourses = await _teacherCourseRepository.GetByTeacherId(teacher.Id);
+        return _mapper.Map<IEnumerable<TeacherCourseDto>>(teacherCourses);
+    }
     public async Task<TeacherCourseDto> GetByIdAsync(int id)
     {
         var teacherCourse = await _teacherCourseRepository.GetByIdAsync(tc => tc.Id == id);

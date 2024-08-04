@@ -46,7 +46,10 @@ public class TeacherService : ITeacherService
     {
         var teacher = await _repository.GetByUserIdAsync(addTeacherDto.UserId);
 
-        _mapper.Map(addTeacherDto, teacher);
+        if (teacher != null)
+            throw new BadRequestException($"Teacher profile already exists");
+
+        teacher = _mapper.Map<Teacher>(addTeacherDto);
 
         await _repository.AddAsync(teacher);
 

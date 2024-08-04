@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistance.Migrations
 {
     /// <inheritdoc />
-    public partial class DefaulPersistance : Migration
+    public partial class DefaultPersistance : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,24 +22,6 @@ namespace Persistance.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Faculties", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Homeworks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EnrollmentId = table.Column<int>(type: "int", nullable: false),
-                    AssignmentId = table.Column<int>(type: "int", nullable: false),
-                    TeacherCourseId = table.Column<int>(type: "int", nullable: false),
-                    StudentUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FileUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Grade = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Homeworks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,13 +138,58 @@ namespace Persistance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TeacherCourseId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Order_TeacherCourseMaps_TeacherCourseId",
+                        column: x => x.TeacherCourseId,
+                        principalTable: "TeacherCourseMaps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Homeworks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EnrollmentId = table.Column<int>(type: "int", nullable: false),
+                    AssignmentId = table.Column<int>(type: "int", nullable: false),
+                    TeacherCourseId = table.Column<int>(type: "int", nullable: false),
+                    StudentUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Homeworks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Homeworks_Assignments_AssignmentId",
+                        column: x => x.AssignmentId,
+                        principalTable: "Assignments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Enrollments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentUserId = table.Column<int>(type: "int", nullable: false),
-                    TeacherCourseId = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
@@ -170,9 +197,9 @@ namespace Persistance.Migrations
                 {
                     table.PrimaryKey("PK_Enrollments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Enrollments_TeacherCourseMaps_TeacherCourseId",
-                        column: x => x.TeacherCourseId,
-                        principalTable: "TeacherCourseMaps",
+                        name: "FK_Enrollments_Order_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Order",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -188,8 +215,18 @@ namespace Persistance.Migrations
                 column: "FacultyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_TeacherCourseId",
+                name: "IX_Enrollments_OrderId",
                 table: "Enrollments",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Homeworks_AssignmentId",
+                table: "Homeworks",
+                column: "AssignmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Order_TeacherCourseId",
+                table: "Order",
                 column: "TeacherCourseId");
 
             migrationBuilder.CreateIndex(
@@ -231,9 +268,6 @@ namespace Persistance.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Assignments");
-
-            migrationBuilder.DropTable(
                 name: "Enrollments");
 
             migrationBuilder.DropTable(
@@ -241,6 +275,12 @@ namespace Persistance.Migrations
 
             migrationBuilder.DropTable(
                 name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "Assignments");
 
             migrationBuilder.DropTable(
                 name: "TeacherCourseMaps");

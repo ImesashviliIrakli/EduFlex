@@ -13,7 +13,8 @@ public class Assignment
     public required string Title { get; set; }
     [Required]
     public required string Description { get; set; }
-    public required string FileUrl { get; set; }
+
+    public string FileUrl { get; set; } = string.Empty;
     [Required]
     public int MaxGrade { get; set; }
     [Required]
@@ -23,4 +24,6 @@ public class Assignment
 
     [ForeignKey("TeacherCourseId")]
     public TeacherCourse? TeacherCourse { get; set; }
+
+    public ICollection<Homework>? Homeworks { get; set; }
 }

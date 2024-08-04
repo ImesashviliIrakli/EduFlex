@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain;
 
@@ -17,4 +18,7 @@ public class Homework
     [Required]
     public required string FileUrl { get; set; }
     public int Grade { get; set; }
+
+    [ForeignKey("AssignmentId")]
+    public Assignment? Assignment { get; set; }
 }

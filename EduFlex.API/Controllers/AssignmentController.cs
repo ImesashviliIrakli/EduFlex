@@ -39,7 +39,7 @@ public class AssignmentController : BaseController
 
     #region Write
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] AddAssignmentDto addAssignmentDto)
+    public async Task<IActionResult> Post([FromForm] AddAssignmentDto addAssignmentDto)
     {
         ModelStateValidator.ValidateModelState(ModelState);
 
@@ -48,7 +48,7 @@ public class AssignmentController : BaseController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromBody] UpdateAssignmentDto updateAssignmentDto)
+    public async Task<IActionResult> Put([FromForm] UpdateAssignmentDto updateAssignmentDto)
     {
         ModelStateValidator.ValidateModelState(ModelState);
 
