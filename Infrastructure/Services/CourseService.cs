@@ -1,4 +1,6 @@
-﻿using Application.Interfaces.FileService;
+﻿using System.Xml;
+using Application.Interfaces.Cache;
+using Application.Interfaces.FileService;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Models.Dtos.CourseDtos;
@@ -12,18 +14,21 @@ public class CourseService : ICourseService
 {
     #region Injection
     private readonly ICourseRepository _courseRepository;
+    private readonly ICacheService _cacheService;
     private readonly IMapper _mapper;
     private readonly ILogger<CourseService> _logger;
     private readonly IFileService<Course> _imageService;
 
     public CourseService(
         ICourseRepository courseRepository,
+        ICacheService cacheService,
         IMapper mapper,
         ILogger<CourseService> logger,
         IFileService<Course> imageService
         )
     {
         _courseRepository = courseRepository;
+        _cacheService = cacheService;
         _mapper = mapper;
         _imageService = imageService;
         _logger = logger;
@@ -33,8 +38,17 @@ public class CourseService : ICourseService
     #region Read
     public async Task<IEnumerable<CourseDto>> GetCoursesAsync()
     {
+        var cacheKey = "AllCourses";
+        var cachedCourses = await _cacheService.GetAsync<List<CourseDto>>(cacheKey);
+
+        if (cachedCourses is { Count: > 0 })
+            return cachedCourses;
+
         var courses = await _courseRepository.GetAllAsync(includeProperties: "Faculty");
         var result = _mapper.Map<IEnumerable<CourseDto>>(courses);
+
+        if(result != null)
+            await _cacheService.SetAsync(cacheKey, result, TimeSpan.FromMinutes(30));
 
         return result;
     }

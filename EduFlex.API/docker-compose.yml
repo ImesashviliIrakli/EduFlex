@@ -6,3 +6,8 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - 5341:80
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
