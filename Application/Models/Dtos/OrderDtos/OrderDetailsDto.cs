@@ -10,6 +10,6 @@ public class OrderDetailsDto
     public decimal Amount { get; set; }
     public int Status { get; set; }
 
-    public StudentDto StudentDto { get; set; }
+    public required StudentDto StudentDto { get; set; }
 }
 

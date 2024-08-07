@@ -14,6 +14,7 @@ public class AppDBContext : DbContext
     public DbSet<Enrollment> Enrollments { get; set; }
     public DbSet<Assignment> Assignments { get; set; }
     public DbSet<Homework> Homeworks { get; set; }
+    public DbSet<Order> Orders { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

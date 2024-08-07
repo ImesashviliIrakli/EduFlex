@@ -2,11 +2,13 @@
 using Application.Interfaces.Facades;
 using Application.Interfaces.FileService;
 using Application.Interfaces.Services;
+using Application.Interfaces.StripeService;
 using Application.Settings;
 using Infrastructure.Facades;
 using Infrastructure.fileService;
 using Infrastructure.Redis;
 using Infrastructure.Services;
+using Infrastructure.StripeService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -35,11 +37,20 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IEnrollmentService, EnrollmentService>();
         services.AddScoped<IAssignmentService, AssignmentService>();
         services.AddScoped<IHomeworkService, HomeworkService>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped(typeof(IFileService<>), typeof(FileService<>));
 
         // Facade Registration
         services.AddScoped<IHomeworkFacade, HomeworkFacade>();
 
-        services.AddScoped(typeof(IFileService<>), typeof(FileService<>));
+        // Stripe Registration
+        var stripeSettings = new StripeSettings();
+        configuration.GetSection("StripeOptions").Bind(stripeSettings);
+        services.AddSingleton(stripeSettings);
+
+        Stripe.StripeConfiguration.ApiKey = stripeSettings.ApiKey;
+
+        services.AddScoped<IStripeService, StripeService.StripeService>();
 
         return services;
     }
